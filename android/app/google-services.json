@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "373049340632",
+    "firebase_url": "https://sycle-app.firebaseio.com",
+    "project_id": "sycle-app",
+    "storage_bucket": "sycle-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373049340632:android:5bc34df025c7a49d369dad",
+        "android_client_info": {
+          "package_name": "com.tsc.sycle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "373049340632-opo3o225r70b8lh3pgg48hbq1i6jkc50.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tsc.sycle",
+            "certificate_hash": "e162bd118dc03500c24c8e4068f1a054e92fd563"
+          }
+        },
+        {
+          "client_id": "373049340632-db6jaj8n2h6b1afjj3mkegbqqldarnmd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLV_LjN347QqVG-FOkNcX6NekSYkRAt5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "373049340632-db6jaj8n2h6b1afjj3mkegbqqldarnmd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "373049340632-lck66kfjq9cvbnvaekc7v8q6lnu33dob.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tsc.sycleapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

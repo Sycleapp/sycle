@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>373049340632-3vcemcou2duvd1gk46mbbdpfp2iucvfg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.373049340632-3vcemcou2duvd1gk46mbbdpfp2iucvfg</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>373049340632-opo3o225r70b8lh3pgg48hbq1i6jkc50.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC10LfXlJbbbS7MHUpuK7iBEM6N2UwHrRs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>373049340632</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tsc.sycle</string>
+	<key>PROJECT_ID</key>
+	<string>sycle-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>sycle-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:373049340632:ios:4d61211978a82dd1369dad</string>
+	<key>DATABASE_URL</key>
+	<string>https://sycle-app.firebaseio.com</string>
+</dict>
+</plist>
