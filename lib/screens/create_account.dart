@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 
 class CreateAccount extends StatefulWidget {
   @override
@@ -7,14 +7,14 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   final _formkey = GlobalKey<FormState>();
-  String name;
+  String username;
 
   submit(){
     final form = _formkey.currentState;
 
     if (form.validate()){
       _formkey.currentState.save();
-    Navigator.pop(context, name);
+    Navigator.pop(context, username);
     }
   }
 
@@ -44,15 +44,15 @@ class _CreateAccountState extends State<CreateAccount> {
                     autovalidate: true,
                     child: TextFormField(
                       validator: (val){
-                        if (val.trim().length < 3 || val.isEmpty){
+                        if (val.trim().length < 1 || val.isEmpty){
                           return "Name to short";
-                        } else if(val.trim().length > 12){
+                        } else if(val.trim().length > 20){
                           return "Name is to long";
                         } else {
                           return null;
                         }
                       },
-                      onSaved: (val) => name = val,
+                      onSaved: (val) => username = val,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Whats your First Name?',
@@ -86,4 +86,4 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     );
   }
-}
+} */

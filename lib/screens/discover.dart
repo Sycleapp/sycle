@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sycle/screens/activity.dart';
-import 'package:sycle/screens/profile.dart';
 
 class DiscoverPage extends StatefulWidget {
   @override
@@ -11,49 +9,39 @@ class _DiscoverPageState extends State<DiscoverPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                    'https://images.unsplash.com/photo-1517030330234-94c4fb948ebc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1275&q=80'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Center(
-              child: Text(
-                'Home Layout',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                ),
-              ),
-            ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        brightness: Brightness.light, 
+        iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
           ),
-          Positioned(
-            child: AppBar(
+              centerTitle: true,
               leading: IconButton(
                 icon: Icon(Icons.account_circle),
                 onPressed: (){
-                  Navigator.push(context, new MaterialPageRoute(builder: (context) => ProfileScreen()));
+                  Navigator.pushNamed(context, '/profile');
                 },
               ),
-              title: Text("Discover"),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
+              title: Text("Discover",
+              style: TextStyle(
+                fontFamily: "Avenir",
+                fontWeight: FontWeight.w900,
+                color: Colors.black
+              )),
+              backgroundColor: Colors.white,
+              elevation:.2,
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.notifications),
                   onPressed: () {
-                    Navigator.push(context, new MaterialPageRoute(builder: (context) => ActivityScreen()));
+                    {
+                  Navigator.pushNamed(context, '/activity');
+                    }
                   },
-                  tooltip: 'Share',
                 ),
               ],
             ),
-          )
-        ],
+      body: ListView(
       ),
     );
   }

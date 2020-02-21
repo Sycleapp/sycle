@@ -1,3 +1,4 @@
+/* import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sycle/screens/activity.dart';
@@ -5,115 +6,135 @@ import 'package:sycle/screens/discover.dart';
 import 'package:sycle/screens/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sycle/screens/upload.dart';
-
+import 'package:sycle/services/models.dart';
 import 'create_account.dart';
 
-import 'package:sycle/models/user.dart';
-
-final GoogleSignIn googlesignin = GoogleSignIn();
-final userRef = Firestore.instance.collection('users');
+final GoogleSignIn googleSignIn = GoogleSignIn();
+final usersRef = Firestore.instance.collection('users');
 final DateTime timestamp = DateTime.now();
 User currentUser;
 
-class SplashScreen extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _HomeState createState() => _HomeState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _HomeState extends State<Home> {
   bool isAuth = false;
   PageController pageController;
-  int pageIndex =0;
+  int pageIndex = 0;
 
-  void initState(){
-    //Sign in flow
+  @override
+  void initState() {
     super.initState();
-    pageController = PageController(initialPage: 2);
-    googlesignin.onCurrentUserChanged.listen((GoogleSignInAccount account){
+    // Detects when user signed in
+    googleSignIn.onCurrentUserChanged.listen((account) {
       handleSignIn(account);
-    }, onError: (err){
-      print('Error Signing In $err');
+    }, onError: (err) {
+      print('Error signing in: $err');
     });
-    //Reauthenticated when user opens app
-    googlesignin.signInSilently(suppressErrors: false)
-    .then((account){
+    // Reauthenticate user when app is opened
+    googleSignIn.signInSilently(suppressErrors: false).then((account) {
       handleSignIn(account);
-    }).catchError((err){
-      print('error signing in $err');
+    }).catchError((err) {
+      print('Error signing in: $err');
     });
   }
 
   handleSignIn(GoogleSignInAccount account) {
-    if (account != null){
-        createUserInFirestore();
-        setState(() {
-          isAuth = true;
-        });
-      } 
-      else{
-        setState(() {
-          isAuth = false;
-        });
-      }
+    if (account != null) {
+      createUserInFirestore();
+      setState(() {
+        isAuth = true;
+      });
+    } else {
+      setState(() {
+        isAuth = false;
+      });
+    }
   }
 
-  @override
-  void dispose(){
-    pageController.dispose();
-    super.dispose();
-    }
-
   createUserInFirestore() async {
-    //Check if user exists in users collection in database according to their ID
-    final GoogleSignInAccount user = googlesignin.currentUser;
-    DocumentSnapshot doc = await userRef.document(user.id).get();
+    // 1) check if user exists in users collection in database (according to their id)
+    final GoogleSignInAccount user = googleSignIn.currentUser;
+    DocumentSnapshot doc = await usersRef.document(user.id).get();
 
-    if(!doc.exists){ 
-    //If user does not exist, we take them to the create account page 
-    final name = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccount()));
-    //Get username from create account, and use it to make users document in database
-    userRef.document(user.id).setData({
-      "id":user.id,
-      "name":name,
-      "photoUrl":user.photoUrl,
-      "email":user.email,
-      "timestamp": timestamp
-    });
+    if (!doc.exists) {
+      // 2) if the user doesn't exist, then we want to take them to the create account page
+      final username = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CreateAccount()));
 
-    doc = await userRef.document(user.id).get();
+      // 3) get username from create account, use it to make new user document in users collection
+      await usersRef.document(user.id).setData({
+        "id": user.id,
+        "username": username,
+        "photoUrl": user.photoUrl,
+        "email": user.email,
+        "displayName": user.displayName,
+        "bio": "",
+        "timestamp": timestamp
+      });
+
+      doc = await usersRef.document(user.id).get();
     }
 
     currentUser = User.fromDocument(doc);
     print(currentUser);
-    print(currentUser.name);
+    print(currentUser.username);
   }
 
-  login(){
-    googlesignin.signIn();
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
 
-  logout(){
-    googlesignin.signOut();
+  login() {
+    googleSignIn.signIn();
   }
 
-  onPagedChanged(int pageIndex){
+  logout() {
+    googleSignIn.signOut();
+  }
+
+   onPageChanged(int pageIndex) {
     setState(() {
       this.pageIndex = pageIndex;
     });
   }
 
-  Widget buildAuthScreen(){
+
+
+  onTap(int pageIndex) {
+    pageController.animateToPage(
+      pageIndex,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  Scaffold buildAuthScreen() {
     return Scaffold(
       body: PageView(
         children: <Widget>[
           DiscoverPage(),
           ActivityScreen(),
           ProfileScreen(profileId: currentUser?.id),
-          UploadScreen(currentUser: currentUser),
         ],
-        controller: PageController(),
-        onPageChanged: onPagedChanged,
-      )
+        controller: pageController,
+        onPageChanged: onPageChanged,
+        physics: NeverScrollableScrollPhysics(),
+      ),
+        bottomNavigationBar: CupertinoTabBar(
+          currentIndex: pageIndex,
+          onTap: onTap,
+          activeColor: Theme.of(context).primaryColor,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home)),
+            BottomNavigationBarItem(icon: Icon(Icons.notifications_active, size: 30,)),
+            BottomNavigationBarItem(icon: Icon(Icons.person_outline,size: 30),
+            ),
+          ]),
     );
   }
 
@@ -175,7 +196,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Text('LOG IN WITH GOOGLE',
                   style: TextStyle(
                     fontSize: 17,
-                    color: const Color(0xFF0037FF),
+                    color: const Color(0xFF0037FF), 
                     fontWeight: FontWeight.bold
                   ),
                   ),
@@ -191,4 +212,4 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return isAuth ? buildAuthScreen() : buildUnAuthScreen();
   }
-}
+}  */
