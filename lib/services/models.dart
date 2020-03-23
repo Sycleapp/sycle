@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 //// Embedded Maps
 
 class Option {
@@ -56,17 +58,17 @@ class Topic {
   final String title;
   final String description;
   final String img;
-  final List<Stories> quizzes;
+  //final List<Stories> quizzes;
 
-  Topic({ this.id, this.title, this.description, this.img, this.quizzes });
+  Topic({ this.id, this.title, this.description, this.img});//, this.quizzes });
 
   factory Topic.fromMap(Map data) {
     return Topic(
-      id: data['id'] ?? '',
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
+      id: data['id'] ?? 'id',
+      title: data['title'] ?? 'title',
+      description: data['description'] ?? 'description',
       img: data['img'] ?? 'default.png',
-      quizzes:  (data['quizzes'] as List ?? []).map((v) => Stories.fromMap(v)).toList(), //data['quizzes'],
+      //quizzes:  (data['quizzes'] as List ?? []).map((v) => Stories.fromMap(v)).toList(), //data['quizzes'],
     );
   }
 

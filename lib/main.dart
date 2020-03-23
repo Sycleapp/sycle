@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:sycle/screens/discover.dart';
+import 'package:sycle/screens/respond.dart';
 import 'services/services.dart';
 import 'screens/screens.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
           '/discover': (context) => DiscoverPage(),
           '/profile': (context) => ProfileScreen(),
           '/activity': (context) => ActivityScreen(),
+          '/respond': (context) => Respond(),
         }
     );
   }

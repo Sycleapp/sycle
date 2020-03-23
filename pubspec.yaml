@@ -59,6 +59,9 @@ flutter:
     - assets/images/google_logo2.png
     - assets/images/google_logo3.png
     - assets/images/logo.png
+    - assets/images/photo-american-football.png
+    - assets/images/photo-stock-market.png
+    - assets/images/photo-travel-globe.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

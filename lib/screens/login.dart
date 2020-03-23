@@ -15,9 +15,10 @@ class LoginScreenState extends State<LoginScreen> {
     super.initState();
     auth.getUser.then(
       (user) {
-        if (user != null) {
+        Navigator.pushReplacementNamed(context, '/discover');
+        /* if (user != null) {
           Navigator.pushReplacementNamed(context, '/discover');
-        }
+        } */
       },
     );
   }
@@ -105,10 +106,11 @@ class LoginButton extends StatelessWidget {
         icon: Icon(icon, color: const Color(0xFF0037FF)),
         color: color,
         onPressed: () async {
-          var user = await loginMethod();
-          if (user != null) {
+          //var user = await loginMethod();
+          Navigator.pushReplacementNamed(context, '/discover');
+          /* if (user != null) {
             Navigator.pushReplacementNamed(context, '/discover');
-          }
+          } */
         },
         label: Expanded(
           child: Text('$text', textAlign: TextAlign.center,
@@ -121,11 +123,11 @@ class LoginButton extends StatelessWidget {
           ),
         ),
         shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
-                    side: BorderSide(
-                      color: Colors.white,
-                      width: 3
-                      )
+          borderRadius: new BorderRadius.circular(30.0),
+          side: BorderSide(
+          color: Colors.white,
+          width: 3
+          )
         )
       ),
     );
