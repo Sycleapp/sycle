@@ -17,16 +17,16 @@ class Collection{
 
   /*Collection Helper Functions that Map Firestore to Class Constructors*/
   //wait for data as a promise; retrieve data one-time only; map individual documents from collection to the Topic class constructor
-  Future<List<Topic>> getTopics() async{
-    var topicCollection = await _db.collection('topics').getDocuments(); 
+  Future<List<Story>> getStories() async{
+    var storyCollection = await _db.collection('stories').getDocuments(); 
     //list of documents => topicCollection.documents 
-    return topicCollection.documents.map((doc) => Topic.fromMap(doc.data)).toList();
+    return storyCollection.documents.map((doc) => Story.fromMap(doc.data)).toList();
   }
   
   //get the data collection as a stream;
-  Stream<List<Topic>> streamTopics(){
+  Stream<List<Story>> streamStories(){
     //snapshots return a list of documents (do two maps), map individual documents to retrieve data
-    return _db.collection('topics').snapshots().map((list) => list.documents.map((doc) => Topic.fromMap(doc.data)));
+    return _db.collection('stories').snapshots().map((list) => list.documents.map((doc) => Story.fromMap(doc.data)));
   }
 }
 

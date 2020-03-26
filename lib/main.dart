@@ -5,20 +5,23 @@ import 'package:sycle/screens/respond.dart';
 import 'services/services.dart';
 import 'screens/screens.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-              // Firebase Analytics
+    return MultiProvider(
+      providers:[
+        FutureProvider<List<Story>>.value(value: Global.storiesFirestore.getStories()),
+      ],
+      child: MaterialApp(
+        // Firebase Analytics
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
         ],
-
-        // Named Routes
+          // Named Routes
         routes: {
           '/': (context) => LoginScreen(),
           '/discover': (context) => DiscoverPage(),
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
           '/activity': (context) => ActivityScreen(),
           '/respond': (context) => Respond(),
         }
+      )  
     );
   }
-}
+} 

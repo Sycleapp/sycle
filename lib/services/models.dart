@@ -29,31 +29,31 @@ class Question {
 
 ///// Database Collections
 
-class Stories { 
+class Story { 
   String id;
+  String category;
   String title;
   String description;
-  String video;
-  String topic;
-  List<Stories> stories;
+  String img;
+  String date;
 
-  Stories({ this.title, this.stories, this.video, this.description, this.id, this.topic });
+  Story({ this.id, this.category, this.title, this.description, this.img});//, this.date });
 
-  factory Stories.fromMap(Map data) {
-    return Stories(
+  factory Story.fromMap(Map data) {
+    return Story(
       id: data['id'] ?? '',
+      category: data['category'] ?? '',
       title: data['title'] ?? '',
-      topic: data['topic'] ?? '',
       description: data['description'] ?? '',
-      video: data['video'] ?? '',
-      stories: (data['stories'] as List ?? []).map((v) => Stories.fromMap(v)).toList()
+      img: data['img'] ?? '',
+      //date: data['date'] ?? '2020-01-01'
     );
   }
   
 }
 
-
-class Topic {
+//Old Code: Leaving Here for Reference; Should Delete in Future Versions
+/* class Topic {
   final String id;
   final String title;
   final String description;
@@ -72,7 +72,7 @@ class Topic {
     );
   }
 
-}
+} */
 
 class Reactions { 
   String id;

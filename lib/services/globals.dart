@@ -11,5 +11,5 @@ class Global {
   static final FirebaseAnalytics analytics = FirebaseAnalytics(); 
 
   //References for FutureBuilder and StremBuilder
-  static final Collection topicsFirestore =  Collection(path: 'topics');
+  static final Collection storiesFirestore =  Collection(path: 'stories');
 }
