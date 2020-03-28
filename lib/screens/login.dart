@@ -121,11 +121,11 @@ class LoginButton extends StatelessWidget {
           ),
         ),
         shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
-                    side: BorderSide(
-                      color: Colors.white,
-                      width: 3
-                      )
+          borderRadius: new BorderRadius.circular(30.0),
+          side: BorderSide(
+          color: Colors.white,
+          width: 3
+          )
         )
       ),
     );

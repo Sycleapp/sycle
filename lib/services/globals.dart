@@ -8,6 +8,8 @@ class Global {
   static final String title = 'Sycle';
 
   // Services
-  static final FirebaseAnalytics analytics = FirebaseAnalytics();
-  
+  static final FirebaseAnalytics analytics = FirebaseAnalytics(); 
+
+  //References for FutureBuilder and StremBuilder
+  static final Collection storiesFirestore =  Collection(path: 'stories');
 }

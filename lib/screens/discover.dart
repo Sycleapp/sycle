@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sycle/services/models.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 class DiscoverPage extends StatefulWidget {
   @override
@@ -6,6 +11,9 @@ class DiscoverPage extends StatefulWidget {
 }
 
 class _DiscoverPageState extends State<DiscoverPage> {
+  String imgURL = "https://uploads0.wikiart.org/00129/images/katsushika-hokusai/the-great-wave-off-kanagawa.jpg"; 
+  
+  //using Classes in models.dart: change notation from data['title'] to data.title
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +49,91 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 ),
               ],
             ),
-      body: ListView(
-      ),
+      body: _getStories(context),
+    );  
+  }
+
+  Widget _getStories(BuildContext context){
+    List<Story> stories = Provider.of<List<Story>>(context);
+
+    /* return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('topics').snapshots(),
+      builder: (context, snapshot){
+        if(!snapshot.hasData) return LinearProgressIndicator();
+        return _buildNewsFeed(context, snapshot.data.documents);
+      }
+    ); */  
+    if(stories == null){stories[0] = new Story(id: "6", category: "Movies", title: "Movies Postponed Release till Winter", img: imgURL);}
+    return _buildNewsFeed(context, stories);
+  } 
+
+  /* Widget _buildNewsFeed(BuildContext context, List<DocumentSnapshot> topics){
+    return ListView(
+      children: topics.map((data) => _buildNewsFeedItem(context, data)).toList()
+    );
+  }  */
+
+  Widget _buildNewsFeed(BuildContext context, List<Story> stories){
+  //Widget _buildNewsFeed(BuildContext context, List<DocumentSnapshot> snapshot){
+    //return ListView.builder(
+    return ListView(
+      children: stories.map((data) => _buildNewsFeedItem(context, data)).toList()
+    );
+  }     
+
+  //Widget _buildNewsFeedItem(BuildContext context, DocumentSnapshot data){
+  Widget _buildNewsFeedItem(BuildContext context, Story story){
+    return GestureDetector(
+      onTap: (){
+         Navigator.pushNamed(context, '/respond');
+      },
+      child: Container(
+      height: 400,
+      margin: EdgeInsets.only(top: 2.0),
+        child: Card (
+          child: FutureBuilder<String>(
+            future: imageRef(story.img),
+            builder: (context,snapshotURL){
+              if(!snapshotURL.hasData){
+                return Container(child:Image.network(imgURL));
+              }
+              return CachedNetworkImage(
+                imageUrl: snapshotURL.data,
+                imageBuilder:(context, imageProvider) =>
+                  Container(
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.fitHeight,
+                        alignment: Alignment.centerLeft
+                      )
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(story.category, style: TextStyle(fontSize: 14, color: Colors.black, fontFamily: "avenir",)),
+                        Text(story.title, style: TextStyle(fontSize: 30, color: Colors.black, fontFamily: "avenir",))  
+                      ],
+                    )
+                  ),
+                placeholder: (context, url) => LinearProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              );
+            }
+          ) 
+        ),
+      )
     );
   }
+
+  //helper function to download image from Firebase Storage and set it as the image path
+  //use a FutureBuilder to deal with async/await issues
+  Future<String> imageRef(String imgPath) async{
+    var imgRef = FirebaseStorage.instance.ref().child(imgPath);
+    print(imgRef);
+    var downloadURL = await imgRef.getDownloadURL();
+    return downloadURL;
+  } 
 }

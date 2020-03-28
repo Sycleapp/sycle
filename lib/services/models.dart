@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 //// Embedded Maps
 
 class Option {
@@ -27,50 +29,50 @@ class Question {
 
 ///// Database Collections
 
-class Stories { 
+class Story { 
   String id;
+  String category;
   String title;
   String description;
-  String video;
-  String topic;
-  List<Stories> stories;
+  String img;
+  String date;
 
-  Stories({ this.title, this.stories, this.video, this.description, this.id, this.topic });
+  Story({ this.id, this.category, this.title, this.description, this.img});//, this.date });
 
-  factory Stories.fromMap(Map data) {
-    return Stories(
+  factory Story.fromMap(Map data) {
+    return Story(
       id: data['id'] ?? '',
+      category: data['category'] ?? '',
       title: data['title'] ?? '',
-      topic: data['topic'] ?? '',
       description: data['description'] ?? '',
-      video: data['video'] ?? '',
-      stories: (data['stories'] as List ?? []).map((v) => Stories.fromMap(v)).toList()
+      img: data['img'] ?? '',
+      //date: data['date'] ?? '2020-01-01'
     );
   }
   
 }
 
-
-class Topic {
+//Old Code: Leaving Here for Reference; Should Delete in Future Versions
+/* class Topic {
   final String id;
   final String title;
   final String description;
   final String img;
-  final List<Stories> quizzes;
+  //final List<Stories> quizzes;
 
-  Topic({ this.id, this.title, this.description, this.img, this.quizzes });
+  Topic({ this.id, this.title, this.description, this.img});//, this.quizzes });
 
   factory Topic.fromMap(Map data) {
     return Topic(
-      id: data['id'] ?? '',
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
+      id: data['id'] ?? 'id',
+      title: data['title'] ?? 'title',
+      description: data['description'] ?? 'description',
       img: data['img'] ?? 'default.png',
-      quizzes:  (data['quizzes'] as List ?? []).map((v) => Stories.fromMap(v)).toList(), //data['quizzes'],
+      //quizzes:  (data['quizzes'] as List ?? []).map((v) => Stories.fromMap(v)).toList(), //data['quizzes'],
     );
   }
 
-}
+} */
 
 class Reactions { 
   String id;
