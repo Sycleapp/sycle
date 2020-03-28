@@ -6,8 +6,14 @@ import 'services/services.dart';
 import 'screens/screens.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
+import 'services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
+void main(){
+  print('RUNNING APP');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -15,6 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers:[
         FutureProvider<List<Story>>.value(value: Global.storiesFirestore.getStories()),
+        //StreamProvider<FirebaseUser>.value(value: AuthService().user),
       ],
       child: MaterialApp(
         // Firebase Analytics

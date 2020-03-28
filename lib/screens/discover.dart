@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sycle/services/db.dart';
-import 'package:sycle/services/globals.dart';
 import 'package:sycle/services/models.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class DiscoverPage extends StatefulWidget {
@@ -99,23 +97,29 @@ class _DiscoverPageState extends State<DiscoverPage> {
               if(!snapshotURL.hasData){
                 return Container(child:Image.network(imgURL));
               }
-              return Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(snapshotURL.data),
-                    fit: BoxFit.fitHeight,
-                    alignment: Alignment.centerLeft
-                  )
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(story.category, style: TextStyle(fontSize: 14, color: Colors.black, fontFamily: "avenir",)),
-                    Text(story.title, style: TextStyle(fontSize: 30, color: Colors.black, fontFamily: "avenir",))  
-                  ],
-                )
+              return CachedNetworkImage(
+                imageUrl: snapshotURL.data,
+                imageBuilder:(context, imageProvider) =>
+                  Container(
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.fitHeight,
+                        alignment: Alignment.centerLeft
+                      )
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(story.category, style: TextStyle(fontSize: 14, color: Colors.black, fontFamily: "avenir",)),
+                        Text(story.title, style: TextStyle(fontSize: 30, color: Colors.black, fontFamily: "avenir",))  
+                      ],
+                    )
+                  ),
+                placeholder: (context, url) => LinearProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               );
             }
           ) 
