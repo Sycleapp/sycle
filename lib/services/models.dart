@@ -51,27 +51,6 @@ class Stories {
 }
 
 
-class Topic {
-  final String id;
-  final String title;
-  final String description;
-  final String img;
-  final List<Stories> quizzes;
-
-  Topic({ this.id, this.title, this.description, this.img, this.quizzes });
-
-  factory Topic.fromMap(Map data) {
-    return Topic(
-      id: data['id'] ?? '',
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      img: data['img'] ?? 'default.png',
-      quizzes:  (data['quizzes'] as List ?? []).map((v) => Stories.fromMap(v)).toList(), //data['quizzes'],
-    );
-  }
-
-}
-
 class Reactions { 
   String id;
   String displayName;
