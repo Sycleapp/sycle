@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           '/discover': (context) => DiscoverPage(),
           '/profile': (context) => ProfileScreen(),
           '/activity': (context) => ActivityScreen(),
-          '/responces': (context) => ResponceScreen(),
+          '/responces': (context) => ResponseScreen(),
         }
     );
   }

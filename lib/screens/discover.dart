@@ -1,4 +1,4 @@
-import 'package:Sycle/screens/responces.dart';
+import 'package:Sycle/screens/responses.dart';
 import 'package:flutter/material.dart';
 
 class DiscoverPage extends StatefulWidget {
@@ -49,7 +49,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         child: InkWell(
         onTap: () => Navigator.push(
         context,
-          MaterialPageRoute(builder: (context) => ResponceScreen())), 
+          MaterialPageRoute(builder: (context) => ResponseScreen())), 
         //Testcode ends
         child: Container(
           margin: new EdgeInsets.all(7),

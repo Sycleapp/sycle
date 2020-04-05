@@ -2,12 +2,12 @@
 import 'package:Sycle/screens/screens.dart';
 import 'package:flutter/material.dart';
 
-class ResponceScreen extends StatefulWidget {
+class ResponseScreen extends StatefulWidget {
   @override
-  _ResponceScreenState createState() => _ResponceScreenState();
+  _ResponseScreenState createState() => _ResponseScreenState();
 }
 
-class _ResponceScreenState extends State<ResponceScreen> {
+class _ResponseScreenState extends State<ResponseScreen> {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
