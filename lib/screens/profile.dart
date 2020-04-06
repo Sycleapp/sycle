@@ -25,7 +25,7 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: Center(
         child: FlatButton(
-            child: Text('logout',
+            child: Text('Logout',
             style: TextStyle(
               color: Colors.white
             ),
