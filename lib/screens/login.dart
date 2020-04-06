@@ -43,8 +43,8 @@ class LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo.png',
-            scale: 3,),
+            Image.asset('assets/images/LogoWhiteNB.png',
+            scale: 10,),
             SizedBox(
               height: 30,
             ),
@@ -59,9 +59,9 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(
-              height: 5,
+              height: 2,
             ),
-            Text('See real prespectives, from real people on todays trending issues.',
+            Text('See real prespectives from real people on todays topics.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
@@ -71,7 +71,7 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 20,
             ),
             LoginButton(
               text: 'LOGIN WITH GOOGLE',
