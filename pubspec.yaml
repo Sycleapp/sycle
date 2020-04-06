@@ -46,6 +46,12 @@ dev_dependencies:
 
   outline_material_icons: ^0.1.1
 
+  flutter_launcher_icons: ^0.7.4
+
+flutter_icons:
+  image_path: 'assets/images/Logo.png'
+  ios: true
+  andriod: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
