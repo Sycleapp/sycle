@@ -11,7 +11,12 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers:[
+        FutureProvider<List<Story>>.value(value: Global.storiesRef.getData()),
+        //FutureProvider<List<Reaction>>.value(value: Global.reactionsRef.getData()),
+      ],
+      child: MaterialApp(
         // Firebase Analytics
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
@@ -22,8 +27,10 @@ class MyApp extends StatelessWidget {
           '/discover': (context) => DiscoverPage(),
           '/profile': (context) => ProfileScreen(),
           '/activity': (context) => ActivityScreen(),
-          '/responces': (context) => ResponceScreen(),
+          //'/responses': (context) => ResponseScreen(),
+          '/camera': (context) => CameraExampleHome(),
         }
+      )
     );
   }
 }

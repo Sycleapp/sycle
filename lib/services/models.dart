@@ -27,48 +27,49 @@ class Question {
 
 ///// Database Collections
 
-class Stories { 
+class Story { 
   String id;
+  String category;
   String title;
   String description;
-  String video;
-  String topic;
-  List<Stories> stories;
+  String img;
+  String date;
 
-  Stories({ this.title, this.stories, this.video, this.description, this.id, this.topic });
+  Story({ this.id, this.category, this.title, this.description, this.img});//, this.date });
 
-  factory Stories.fromMap(Map data) {
-    return Stories(
+  factory Story.fromMap(Map data) {
+    return Story(
       id: data['id'] ?? '',
+      category: data['category'] ?? '',
       title: data['title'] ?? '',
-      topic: data['topic'] ?? '',
       description: data['description'] ?? '',
-      video: data['video'] ?? '',
-      stories: (data['stories'] as List ?? []).map((v) => Stories.fromMap(v)).toList()
+      img: data['img'] ?? '',
+      //date: data['date'] ?? '2020-01-01'
     );
   }
   
 }
 
 
-class Reactions { 
-  String id;
+class Reaction { 
+  //String uid;
+  String sid;
   String displayName;
   String caption;
   String video;
-  String tag;
-  List<Reactions> reactions;
+  String location;
+  //int likes;
 
-  Reactions({ this.displayName, this.reactions, this.video, this.caption, this.id, this.tag });
+  Reaction({ this.sid, this.displayName, this.location, this.video, this.caption});
 
-  factory Reactions.fromMap(Map data) {
-    return Reactions(
-      id: data['id'] ?? '',
+  factory Reaction.fromMap(Map data) {
+    return Reaction(
+      //uid: data['userID'] ?? '',
+      sid: data['storyID'] ?? '',
       displayName: data['displayName'] ?? '',
-      tag: data['tag'] ?? '',
+      location: data['location'] ?? 'Mars',
       caption: data['caption'] ?? '',
       video: data['video'] ?? '',
-      reactions: (data['reactions'] as List ?? []).map((v) => Reactions.fromMap(v)).toList()
     );
   }
   

@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import './globals.dart';
+import './models.dart';
 
 //Needs to be connected with Firebase (Chase S)
-
 class Document<T> {
   final Firestore _db = Firestore.instance;
   final String path; 
@@ -34,10 +34,12 @@ class Collection<T> {
   final String path; 
   CollectionReference ref;
 
+  //collection class constructor
   Collection({ this.path }) {
     ref = _db.collection(path);
   }
 
+  
   Future<List<T>> getData() async {
     var snapshots = await ref.getDocuments();
     return snapshots.documents.map((doc) => Global.models[T](doc.data) as T ).toList();
@@ -47,9 +49,33 @@ class Collection<T> {
     return ref.snapshots().map((list) => list.documents.map((doc) => Global.models[T](doc.data) as T) );
   }
 
+  /*FOR REFERENCE PURPOSES /*Collection Helper Functions that Map Firestore to Class Constructors*/
+  //wait for data as a promise; retrieve data one-time only; map individual documents from collection to the Topic class constructor
+  Future<List<Story>> getStories() async{
+    var storyCollection = await _db.collection('stories').getDocuments(); 
+    //list of documents => storyCollection.documents 
+    return storyCollection.documents.map((doc) => Story.fromMap(doc.data)).toList();
+  }
+  
+  //get the data collection as a stream;
+  Stream<List<Story>> streamStories(){
+    //snapshots return a list of documents (do two maps), map individual documents to retrieve data
+    return _db.collection('stories').snapshots().map((list) => list.documents.map((doc) => Story.fromMap(doc.data)));
+  } */
 
 }
 
+class Database{
+  final Firestore _db = Firestore.instance;
+  
+  //helper function to get reactions subcollections based on storyID
+  Future<List<Reaction>> getReactionSubCollection(String id) async{
+    var reactionSubCollection = await _db.collectionGroup('reactions').where('storyID', isEqualTo: id).getDocuments();
+    return reactionSubCollection.documents.map((doc) => Reaction.fromMap(doc.data)).toList();
+  }
+  
+
+}
 
 class UserData<T> {
   final Firestore _db = Firestore.instance;

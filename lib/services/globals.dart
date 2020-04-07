@@ -13,12 +13,12 @@ class Global {
     // Data Models
   static final Map models = {
     User: (data) => User.fromMap(data),
-    Stories: (data) => Stories.fromMap(data),
-    Reactions: (data) => Reactions.fromMap(data),
+    Story: (data) => Story.fromMap(data),
+    Reaction: (data) => Reaction.fromMap(data),
   };
 
   // Firestore References for Writes
-  static final Collection<Reactions> topicsRef = Collection<Reactions>(path: 'reactions');
-  static final Collection<Stories> storiesRef = Collection<Stories>(path: 'stories');
+  //static final Collection<Reaction> reactionsRef = Collection<Reaction>(path: 'reactions');
+  static final Collection<Story> storiesRef = Collection<Story>(path: 'stories');
   
 }
