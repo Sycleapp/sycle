@@ -16,8 +16,17 @@ class _ResponseScreenState extends State<ResponseScreen> {
     onDismissed: (_) => Navigator.of(context).pop(DiscoverPage),
       child: Container(
       color: Colors.green,
-        child: Container(
-          
+        child: Center(
+          child: FlatButton( 
+          child: Text('Camera',
+          style: TextStyle(
+            color: Colors.white
+          ),
+          ),
+          color: Colors.white,
+          onPressed: () => Navigator.push(
+        context,
+          MaterialPageRoute(builder: (context) => CameraExampleHome())), ),
         ),
       )
     );
