@@ -1,4 +1,5 @@
 import 'package:Sycle/screens/responses.dart';
+import 'package:Sycle/shared/scale_route.dart';
 import 'package:flutter/material.dart';
 
 class DiscoverPage extends StatefulWidget {
@@ -49,9 +50,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             child: new AspectRatio(aspectRatio: 400 / 600,
         //Remove this when you put it into a listview. This is just test code
               child: InkWell(
-              onTap: () => Navigator.push(
-              context,
-                MaterialPageRoute(builder: (context) => ResponseScreen())), 
+              onTap: () => Navigator.push(context, ScaleRoute(page: ResponseScreen())),
               //Testcode ends
               child: Container(
                 margin: new EdgeInsets.all(0),
@@ -98,8 +97,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
             ),
           )
         )
-        )
-     )
+      )
+      )
      )    
     );
   }

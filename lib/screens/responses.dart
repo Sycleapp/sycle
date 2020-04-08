@@ -1,5 +1,5 @@
 //This is the UI for the responces for a story
-import 'package:Sycle/screens/screens.dart';
+import 'package:Sycle/shared/scale_route.dart';
 import 'package:flutter/material.dart';
 
 class ResponseScreen extends StatefulWidget {
@@ -10,10 +10,12 @@ class ResponseScreen extends StatefulWidget {
 class _ResponseScreenState extends State<ResponseScreen> {
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
+    return Container(
+      color: Colors.white,
+    child: Dismissible(
     direction: DismissDirection.vertical,
     key: Key('key'),
-    onDismissed: (_) => Navigator.of(context).pop(DiscoverPage),
+    onDismissed: (_) => Navigator.pop(context, ScaleRoute(page: ResponseScreen())),
       child: Container(
       color: Colors.green,
         child: Center(
@@ -24,11 +26,11 @@ class _ResponseScreenState extends State<ResponseScreen> {
           ),
           ),
           color: Colors.white,
-          onPressed: () => Navigator.push(
-        context,
-          MaterialPageRoute(builder: (context) => CameraExampleHome())), ),
+          onPressed: () => Navigator.push(context, ScaleRoute(page: ResponseScreen())),
         ),
+        )
       )
+    )
     );
   }
 }
