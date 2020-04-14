@@ -21,7 +21,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
          style: TextStyle(
            color: Colors.black,
            fontFamily: "Avenir",
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w900,
          ),
         ),
       )

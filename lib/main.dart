@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, 
         // Firebase Analytics
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
           '/profile': (context) => ProfileScreen(),
           '/activity': (context) => ActivityScreen(),
           '/responces': (context) => ResponseScreen(),
+          '/camera': (context) => CameraExampleHome(),
         }
     );
   }

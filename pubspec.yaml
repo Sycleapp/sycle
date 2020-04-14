@@ -41,6 +41,7 @@ dev_dependencies:
 
   camera: ^0.5.7+4
   video_player: ^0.10.8+1
+  path: ^1.6.4
   
   share: ^0.6.3+6
 

@@ -1,0 +1,37 @@
+ /* Row(children: <Widget>[
+              
+              Container(
+              child: IconButton(
+                  icon: Icon(Icons.close),
+                  color: Colors.white,
+                  onPressed: () {
+                    {
+                  Navigator.pop(context);
+                    }
+                  },
+                ),
+                alignment: Alignment(0.85, 0.7),
+              ),
+              Container(
+                width: 200,
+                child: Text('Topic name',
+                style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                color: Colors.white),
+                ),
+                alignment: Alignment(-0.85, 0.5),
+              ),
+              Container(
+              child: IconButton(
+                  icon: Icon(Icons.add_circle_outline),
+                  color: Colors.white,
+                  onPressed: () {
+                    {
+                  Navigator.pushNamed(context, '/camera');
+                    }
+                  },
+                ),
+                alignment: Alignment(-0.85, 0.5),
+              )
+            ]), */
