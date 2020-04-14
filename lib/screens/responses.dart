@@ -99,13 +99,25 @@ class _ResponseScreenState extends State<ResponseScreen> {
               )),
               alignment: Alignment(-.85, 0.5),
           ),
-          //Safe Area
-          Expanded(child: Column(children: <Widget>[
+          //Main area
+          Expanded(child: Row(children: <Widget>[
+            //Tap for previous item
+            Container(
+              width: 35,
+              color: Colors.yellow,
+            ),
+            //Like area 
             Container(
               margin: new EdgeInsets.all(1),
-              width: 414,
+              width: 317,
               color: Colors.black,
-            )
+            ),
+            //Tap for next item
+            Container(
+              width: 60,
+              color: Colors.yellow,
+              alignment: Alignment(-.85, 0.5),
+            ),
           ],)),
           //Bottom UI
           Container(
