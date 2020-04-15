@@ -9,11 +9,13 @@ import 'package:provider/provider.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  //AuthService auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers:[
         FutureProvider<List<Story>>.value(value: Global.storiesRef.getData()),
+        StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged)
         //FutureProvider<List<Reaction>>.value(value: Global.reactionsRef.getData()),
       ],
       child: MaterialApp(

@@ -6,7 +6,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:video_player/video_player.dart';
 import 'package:Sycle/services/db.dart';
 import 'package:share/share.dart';
-
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:like_button/like_button.dart';
+import 'package:Sycle/services/auth.dart';
 
 class ResponseScreen extends StatefulWidget {
   final String sid;
@@ -32,8 +35,6 @@ class _ResponseScreenState extends State<ResponseScreen> {
     _videoController.dispose();
     super.dispose();
   }
-
-
   
   @override
   Widget build(BuildContext context) {
@@ -58,6 +59,8 @@ class _ResponseScreenState extends State<ResponseScreen> {
   }
 
   Widget _buildVideoReaction(BuildContext context, Reaction reaction){
+    FirebaseUser user = Provider.of<FirebaseUser>(context);
+    print("USERID ${user.uid}");
     return Scaffold(
       backgroundColor: Colors.black,
       body: FutureBuilder<String>(
@@ -97,11 +100,11 @@ class _ResponseScreenState extends State<ResponseScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             BottomFirstRow(reaction.caption, snapshotURL.data),
-                            BottomSecondRow(reaction.caption)
-                          ],
+                            LikeButtonSecondRow(reaction, user)
+                          ]
                         )
-                      ) 
-                    )
+                      )
+                    )  
                   ]
                 )
               )
@@ -244,11 +247,10 @@ class BottomFirstRow extends StatelessWidget{
     );     
   }  
 }
-  
-  
+
 class BottomSecondRow extends StatelessWidget{
   final String caption;
-
+  
   BottomSecondRow(this.caption);
 
   @override
@@ -267,10 +269,104 @@ class BottomSecondRow extends StatelessWidget{
         ),
         Icon(
           Icons.favorite_border,
-          color: Colors.white,
-          size: 30.0
-        )
+          color: Colors.white
+        ),
       ]
     );
   }  
 }
+
+class LikeButtonSecondRow extends StatefulWidget{
+  final Reaction reaction;
+  final FirebaseUser user;
+  
+  LikeButtonSecondRow(this.reaction, this.user);
+
+  
+@override
+  _LikeButtonState createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButtonSecondRow>{
+  bool isTapped = false;
+  Database _firestore = Database();
+
+  @override
+  Widget build(BuildContext context){
+    Reaction reaction = widget.reaction;
+    FirebaseUser user = widget.user;
+
+    return InkWell(
+      child: Icon(
+        (isTapped? Icons.favorite : Icons.favorite_border),
+        color: (isTapped? Colors.red : Colors.white),
+        size: 30.0
+      ),
+      onTap: (){
+        setState((){
+          if(isTapped){
+            isTapped = false;
+          }
+          else{
+            isTapped = true;
+          }
+        });
+        _firestore.updateLikeInformationInFeedSubCollection(reaction, user, isTapped);
+      }
+    );
+
+    //BUGGY CODE: Need to figure out how to pertain like state upon switching views
+    /* return FutureBuilder(
+      future: _firestore.getReactionClickUsers(reaction.rid),
+      builder: (context, snapshotUser){
+        if(!snapshotUser.data){
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children:[
+              Text(
+                reaction.caption,
+                style: TextStyle(
+                  fontFamily: "Avenir",
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                  fontSize: 18
+                )
+              ),
+              Icon(
+                Icons.favorite_border,
+                color: Colors.white
+              ),
+            ]
+          );
+        } 
+        bool isRecorded = false;
+        List<String> clickUsers = snapshotUser.data;
+        clickUsers.forEach((clickUser) =>{
+          if(clickUser == user.uid){
+            isRecorded = true
+          }
+        }); 
+        return InkWell(
+          child: Icon(
+            (isTapped||isRecorded? Icons.favorite : Icons.favorite_border),
+            color: (isTapped||isRecorded? Colors.red : Colors.white),
+            size: 30.0
+          ),
+          onTap: (){
+            setState((){
+              if(isTapped){
+                isTapped = false;
+              }
+              else{
+                isTapped = true;
+              }
+            });
+            _firestore.updateLikeInformationInFeedSubCollection(reaction, user, isTapped);
+          }
+        );
+      }
+    ); */
+  }  
+}
+
+

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import '../services/services.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileScreen extends StatelessWidget {
   final AuthService auth = AuthService();
-
+  
   @override
   Widget build(BuildContext context) {
+    FirebaseUser user = Provider.of<FirebaseUser>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -24,18 +28,36 @@ class ProfileScreen extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: FlatButton(
-            child: Text('logout',
-            style: TextStyle(
-              color: Colors.white
+        child: Column(
+          children:[
+            SizedBox(height: 25),
+            Image.network(user.photoUrl),
+            SizedBox(height: 15), 
+            Text(
+              user.displayName.split(" ")[0],
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Avenir",
+                fontWeight: FontWeight.w600,
+                fontSize: 30 
+              )
             ),
-            ),
-            color: Colors.red,
-            onPressed: () async {
-              await auth.signOut();
-              Navigator.of(context)
+            SizedBox(height: 50),
+            FlatButton(
+              child: Text('logout',
+                style: TextStyle(
+                  color: Colors.white
+                ),
+              ),
+              color: Colors.red,
+              onPressed: () async {
+                await auth.signOut();
+                Navigator.of(context)
                   .pushNamedAndRemoveUntil('/', (route) => false);
-            }),
+              }
+            )
+          ]
+        ),
       ),
     );
   }

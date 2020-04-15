@@ -52,27 +52,77 @@ class Story {
 
 
 class Reaction { 
-  //String uid;
+  String uid;
   String sid;
+  String rid;
   String displayName;
+  String sTitle;
   String caption;
   String video;
   String location;
-  //int likes;
+  int likeCount;
 
-  Reaction({ this.sid, this.displayName, this.location, this.video, this.caption});
+  Reaction({ this.uid, this.sid, this.rid, this.displayName, this.sTitle, this.location, this.video, this.caption, this.likeCount});
 
   factory Reaction.fromMap(Map data) {
     return Reaction(
-      //uid: data['userID'] ?? '',
+      uid: data['userID'] ?? '',
       sid: data['storyID'] ?? '',
+      rid: data['reactionID'] ?? '',
       displayName: data['displayName'] ?? '',
+      sTitle: data['storyTitle'] ?? '',
       location: data['location'] ?? 'Mars',
       caption: data['caption'] ?? '',
       video: data['video'] ?? '',
+      likeCount: data['likeCount'] ?? 0
     );
-  }
+  } 
+}
+
+class Feed{
+  String rid;
+  String uidReaction;
+  String rUserName;
+  String rUserPhotoUrl;
+  String sid;
+  String sTitle;
+  String uidUpload;
   
+  Feed({this.rid, this.uidReaction, this. rUserName, this.rUserPhotoUrl, this.sid, this.sTitle, this.uidUpload});
+
+  factory Feed.fromMap(Map data) {
+    return Feed(
+      rid: data['reactionID'] ?? '',
+      uidReaction: data['reactionUserID'] ?? '',
+      rUserName: data['reactionUserName'] ?? '',
+      rUserPhotoUrl: data['reactionUserPhotoURL'],
+      sid: data['storyID'] ?? '',
+      sTitle: data['storyTitle'] ?? '',
+      uidUpload: data['uploadUserID'] ?? '',
+    );
+  } 
+
+}
+
+class Activity{
+  String rid;
+  String sid;
+  String uidUpload;
+  int likeCount;
+  List<String> rUsers;
+  
+  Activity({this.rid, this.sid, this.uidUpload, this.likeCount, this.rUsers});
+
+  factory Activity.fromMap(Map data) {
+    return Activity(
+      rid: data['reactionID'] ?? '',
+      sid: data['storyID'] ?? '',
+      uidUpload: data['uploadUserID'] ?? '',
+      likeCount: data['likeCount'] ?? 0,
+      rUsers: List<String>.from(data['reactionUser']) ?? ['']
+    );
+  } 
+
 }
 
 class User {

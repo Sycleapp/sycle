@@ -70,10 +70,94 @@ class Database{
   
   //helper function to get reactions subcollections based on storyID
   Future<List<Reaction>> getReactionSubCollection(String id) async{
-    var reactionSubCollection = await _db.collectionGroup('reactions').where('storyID', isEqualTo: id).getDocuments();
+    //var reactionSubCollection = await _db.collectionGroup('reactions').where('storyID', isEqualTo: id).getDocuments();
+    var reactionSubCollection = await _db.collection('stories').document(id).collection('reactions').getDocuments();
     return reactionSubCollection.documents.map((doc) => Reaction.fromMap(doc.data)).toList();
   }
+
+  //helper function to get activities subcollections based on userID
+  Future<List<Feed>> getFeedSubCollection(String id) async{
+    var feedSubCollection = await _db.collection('users').document(id).collection('feeds').getDocuments();
+    return feedSubCollection.documents.map((doc) => Feed.fromMap(doc.data)).toList();
+  }
+
+  //helper function to get all clicked users based on reactionID
+  Future<List<String>> getReactionClickUsers(String rid) async{
+    List<String> stringArray = [''];
+    var activityDocument = await _db.collection('activities').document(rid).get();
+    if(activityDocument.data.isNotEmpty) return Activity.fromMap(activityDocument.data).rUsers;
+    //refactor for situation where no data is in document
+    if(activityDocument.data.isEmpty) return stringArray;
+  }
   
+  //helper function to update information based on like click action; 
+  //add/remove data to reaction subcollection, feeds subcollection, and activities collection 
+  Future<void> updateLikeInformationInFeedSubCollection(Reaction reaction, FirebaseUser user, bool isTapped) async{
+    String rid = reaction.rid;
+    String sid = reaction.sid;
+    String sTitle = reaction.sTitle;
+    String uidUploader = reaction.uid;
+    String uidClicker = user.uid;
+    String clickerName = user.displayName;
+    String clickerPhoto = user.photoUrl;
+
+    //check if user has already liked the reaction
+    bool isRecorded = false;
+    var clickUsers = await getReactionClickUsers(rid);
+    if(clickUsers != null){
+      clickUsers.forEach((user) => {
+        if(user == uidClicker){
+          isRecorded = true
+        }
+      });
+    }
+
+    if(isTapped && !isRecorded){
+      print("DATA SHOULD BE UPDATED");
+      try{
+        _db.collection('stories').document(sid).collection('reactions').document(rid).updateData({'likeCount': FieldValue.increment(1)});
+        _db.collection('users').document(uidClicker).collection('feeds').document().setData(
+          {'reactionUserID': uidClicker,
+           'reactionUserName': clickerName.split(" ")[0],
+           'reactionUserPhotoURL': clickerPhoto,
+           'storyID': sid,
+           'storyTitle': sTitle,
+           'reactionID': rid,
+           'uploadUserID': uidUploader},
+          merge: true
+        );
+        _db.collection('activities').document(rid).updateData({
+          'reactionUser': FieldValue.arrayUnion([uidClicker]),
+          'likeCount': FieldValue.increment(1)}
+        );
+        isRecorded = true;
+      }
+      catch(e){
+        print(e.toString());
+      }
+    }
+
+    if(!isTapped && isRecorded){
+      try{
+        _db.collection('stories').document(sid).collection('reactions').document(rid).updateData({'likeCount': FieldValue.increment(-1)});
+        var query = _db.collection('users').document(uidClicker).collection('feeds').where('reactionID', isEqualTo: rid).where('reactionUserID', isEqualTo: uidClicker);
+        query.getDocuments().then((collectionSnapshot) => {
+          collectionSnapshot.documents.forEach((doc){
+            doc.reference.delete();
+          })
+        });
+        _db.collection('activities').document(rid).updateData({
+          'reactionUser': FieldValue.arrayRemove([uidClicker]),
+          'likeCount': FieldValue.increment(-1)}
+        );
+        isRecorded = false;
+      }
+      catch(e){
+        print(e.toString());
+      }       
+    }
+    return isRecorded;    
+  }
 
 }
 
