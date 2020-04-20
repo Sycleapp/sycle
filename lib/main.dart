@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
           '/activity': (context) => ActivityScreen(),
           //'/responses': (context) => ResponseScreen(),
           '/camera': (context) => CameraExampleHome(),
+          '/upload': (context) => UploadScreen()
         }
       )
     );

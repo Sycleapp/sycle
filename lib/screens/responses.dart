@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:like_button/like_button.dart';
 import 'package:Sycle/services/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ResponseScreen extends StatefulWidget {
   final String sid;
@@ -41,30 +42,29 @@ class _ResponseScreenState extends State<ResponseScreen> {
     //take storyID passed in from previous discover page
     String reactionSID = widget.sid;
 
-    return FutureBuilder<List<Reaction>>(
-      future: _firestore.getReactionSubCollection(reactionSID),
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('stories').document(reactionSID).collection('reactions').snapshots(),
       builder: (context, snapshot){
-        if(!snapshot.hasData || snapshot.data.length == 0) return _defaultReactionSlide();
-        List<Reaction> reactions = snapshot.data;
-        return _buildReactionSlide(context, reactions);
+        if(!snapshot.hasData || snapshot.data.documents.length == 0) return _defaultReactionSlide();
+        return _buildReactionSlide(context, snapshot.data.documents);
       }
     );
   }
 
-  Widget _buildReactionSlide(BuildContext context, List<Reaction> reactions){
+  Widget _buildReactionSlide(BuildContext context, List<DocumentSnapshot> reactions){
     return PageView(
       controller: _controller,
       children: reactions.map((data) => _buildVideoReaction(context, data)).toList()
     );
   }
 
-  Widget _buildVideoReaction(BuildContext context, Reaction reaction){
+  Widget _buildVideoReaction(BuildContext context, DocumentSnapshot reaction){
     FirebaseUser user = Provider.of<FirebaseUser>(context);
     print("USERID ${user.uid}");
     return Scaffold(
       backgroundColor: Colors.black,
       body: FutureBuilder<String>(
-        future: videoRef(reaction.video),
+        future: videoRef(reaction['video']),
         builder: (context, snapshotURL){
           if(!snapshotURL.hasData) return _defaultReactionSlide();
           _videoController = VideoPlayerController.network(snapshotURL.data)
@@ -90,8 +90,8 @@ class _ResponseScreenState extends State<ResponseScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children:[
-                    TopFirstRow(reaction.displayName),  
-                    TopSecondRow(reaction.location),
+                    TopFirstRow(reaction['displayName']),  
+                    TopSecondRow(reaction['location']),
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomLeft,
@@ -99,7 +99,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            BottomFirstRow(reaction.caption, snapshotURL.data),
+                            BottomFirstRow(reaction['caption'], snapshotURL.data),
                             LikeButtonSecondRow(reaction, user)
                           ]
                         )
@@ -277,7 +277,7 @@ class BottomSecondRow extends StatelessWidget{
 }
 
 class LikeButtonSecondRow extends StatefulWidget{
-  final Reaction reaction;
+  final DocumentSnapshot reaction;
   final FirebaseUser user;
   
   LikeButtonSecondRow(this.reaction, this.user);
@@ -293,60 +293,29 @@ class _LikeButtonState extends State<LikeButtonSecondRow>{
 
   @override
   Widget build(BuildContext context){
-    Reaction reaction = widget.reaction;
+    DocumentSnapshot reaction = widget.reaction;
     FirebaseUser user = widget.user;
+    List<String> clickedUsers = new List<String>.from(reaction['reactionUsers']);
 
-    return InkWell(
-      child: Icon(
-        (isTapped? Icons.favorite : Icons.favorite_border),
-        color: (isTapped? Colors.red : Colors.white),
-        size: 30.0
-      ),
-      onTap: (){
-        setState((){
-          if(isTapped){
-            isTapped = false;
-          }
-          else{
-            isTapped = true;
-          }
-        });
-        _firestore.updateLikeInformationInFeedSubCollection(reaction, user, isTapped);
+    bool isRecorded = false;
+    clickedUsers.forEach((rUser) => {
+      if(rUser == user.uid){
+        isRecorded = true
       }
-    );
-
-    //BUGGY CODE: Need to figure out how to pertain like state upon switching views
-    /* return FutureBuilder(
-      future: _firestore.getReactionClickUsers(reaction.rid),
-      builder: (context, snapshotUser){
-        if(!snapshotUser.data){
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children:[
-              Text(
-                reaction.caption,
-                style: TextStyle(
-                  fontFamily: "Avenir",
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                  fontSize: 18
-                )
-              ),
-              Icon(
-                Icons.favorite_border,
-                color: Colors.white
-              ),
-            ]
-          );
-        } 
-        bool isRecorded = false;
-        List<String> clickUsers = snapshotUser.data;
-        clickUsers.forEach((clickUser) =>{
-          if(clickUser == user.uid){
-            isRecorded = true
-          }
-        }); 
-        return InkWell(
+    });
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children:[
+        Text(
+          reaction['caption'],
+          style: TextStyle(
+            fontFamily: "Avenir",
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+            fontSize: 18
+          )
+        ),
+        InkWell(
           child: Icon(
             (isTapped||isRecorded? Icons.favorite : Icons.favorite_border),
             color: (isTapped||isRecorded? Colors.red : Colors.white),
@@ -354,18 +323,20 @@ class _LikeButtonState extends State<LikeButtonSecondRow>{
           ),
           onTap: (){
             setState((){
-              if(isTapped){
+              if(isTapped || isRecorded){
                 isTapped = false;
+                isRecorded = false;
               }
               else{
                 isTapped = true;
+                isRecorded = true;
               }
             });
             _firestore.updateLikeInformationInFeedSubCollection(reaction, user, isTapped);
           }
-        );
-      }
-    ); */
+        )
+      ]
+    );
   }  
 }
 

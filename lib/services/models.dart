@@ -61,8 +61,9 @@ class Reaction {
   String video;
   String location;
   int likeCount;
+  List<String> rUsers;
 
-  Reaction({ this.uid, this.sid, this.rid, this.displayName, this.sTitle, this.location, this.video, this.caption, this.likeCount});
+  Reaction({ this.uid, this.sid, this.rid, this.displayName, this.sTitle, this.location, this.video, this.caption, this.likeCount, this.rUsers});
 
   factory Reaction.fromMap(Map data) {
     return Reaction(
@@ -74,7 +75,8 @@ class Reaction {
       location: data['location'] ?? 'Mars',
       caption: data['caption'] ?? '',
       video: data['video'] ?? '',
-      likeCount: data['likeCount'] ?? 0
+      likeCount: data['likeCount'] ?? 0,
+      rUsers: List<String>.from(data['reactionUsers']) ?? ['']
     );
   } 
 }
