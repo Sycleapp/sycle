@@ -47,7 +47,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
      body: Center(
        child: Card(
          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: new AspectRatio(aspectRatio: 400 / 600,
+            child: new AspectRatio(aspectRatio: 450 / 600,
         //Remove this when you put it into a listview. This is just test code
               child: InkWell(
               onTap: () => Navigator.push(context, ScaleRoute(page: ResponseScreen())),
@@ -66,7 +66,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 //Text
                 child: Column(
                   children: <Widget>[
-                    new AspectRatio(aspectRatio: 400 / 520),
+                    new AspectRatio(aspectRatio: 450 / 520),
                     //Catagory
                     Container(
                       child: new Text(
