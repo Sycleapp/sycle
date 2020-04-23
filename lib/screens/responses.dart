@@ -1,8 +1,8 @@
 //This is the UI for the responces for a story
 import 'package:Sycle/screens/screens.dart';
 import 'package:Sycle/shared/scale_route.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:Sycle/shared/size_config.dart';
 
 class ResponseScreen extends StatefulWidget {
   @override
@@ -12,6 +12,7 @@ class ResponseScreen extends StatefulWidget {
 class _ResponseScreenState extends State<ResponseScreen> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: Container(
         //Video playback
@@ -21,7 +22,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
           Container(
             //topBar
             color: Colors.black,
-            height: 100,
+            height: 80,
             child: Expanded(child: Row(children: <Widget>[
               Container(
                 margin: new EdgeInsets.all(1),
@@ -47,7 +48,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                 style: TextStyle(
                   fontFamily: 'Avenir',
                 fontWeight: FontWeight.w600,
-                fontSize: 20,
+                fontSize: 18,
                 color: Colors.white),
                 ),
                 alignment: Alignment(0, 0.35),
@@ -62,7 +63,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                   iconSize: 28,
                   onPressed: () {
                     {
-                  Navigator.pushNamed(context, '/camera');
+                  Navigator.push(context, ScaleRoute(page: CameraScreen()));
                     }
                   },
                 ),
@@ -74,9 +75,9 @@ class _ResponseScreenState extends State<ResponseScreen> {
           ),
           //User Responce info (Name and Location)
           Container(
-            margin: new EdgeInsets.all(1),
+            margin: new EdgeInsets.all(.01),
             color: Colors.black,
-            height: 30,
+            height: SizeConfig.safeBlockVertical * 5,
             child: Text('Name',
             style: TextStyle(
               color: Colors.white,
@@ -89,7 +90,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
           Container(
             margin: new EdgeInsets.all(1),
             color: Colors.black,
-            height: 40,
+            height: SizeConfig.safeBlockVertical * 4,
             child: Text('Location',
             style: TextStyle(
               color: Colors.white,
@@ -100,42 +101,47 @@ class _ResponseScreenState extends State<ResponseScreen> {
               alignment: Alignment(-.85, 0.5),
           ),
           //Main area
-          Expanded(child: Row(children: <Widget>[
+          Container(
+            height:SizeConfig.safeBlockVertical * 73,
+            child: Expanded(child: Row(children: <Widget>[
             //Tap for previous item
             Container(
-              width: 35,
+              margin: new EdgeInsets.all(1),
+              width: SizeConfig.safeBlockHorizontal * 7,
               color: Colors.yellow,
+              alignment: Alignment(0, 0.35),
             ),
             //Like area 
-            Container(
+            Expanded(
+              child: Container(
               margin: new EdgeInsets.all(1),
-              width: 317,
-              color: Colors.black,
+              width: SizeConfig.safeBlockHorizontal * 200,
+              color: Colors.green,
+              alignment: Alignment(0, 0.35),
+              )
             ),
             //Tap for next item
             Container(
-              width: 60,
+              margin: new EdgeInsets.all(1),
+              width: SizeConfig.safeBlockHorizontal * 7,
               color: Colors.yellow,
-              alignment: Alignment(-.85, 0.5),
+              alignment: Alignment(.7, 0.5),
             ),
           ],)),
+          ),
           //Bottom UI
           Container(
             margin: new EdgeInsets.all(1),
-            height: 90,
             color: Colors.black,
             child: Text('Caption',
             style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: 17
+              fontWeight: FontWeight.w600,
+              fontSize: 18
               ),
             ),
             alignment: Alignment(-.85, 0.5),
           ),
-          Container(
-            margin: new EdgeInsets.all(10),
-          )
         ],
       
         ),

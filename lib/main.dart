@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           '/profile': (context) => ProfileScreen(),
           '/activity': (context) => ActivityScreen(),
           '/responces': (context) => ResponseScreen(),
-          '/camera': (context) => CameraExampleHome(),
+          '/camera': (context) => CameraScreen(),
         }
     );
   }
