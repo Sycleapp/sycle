@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Sycle/screens/upload.dart';
 import 'package:Sycle/shared/scale_route.dart';
+import 'package:Sycle/shared/size_config.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -104,7 +105,7 @@ class CameraScreenState extends State<CameraScreen>
                 fontSize: 18,
                 color: Colors.white),
                 ),
-                alignment: Alignment(0, 0.35),
+                alignment: Alignment(0, 0.35), 
                   )),
               Container(
                 margin: new EdgeInsets.all(1),
@@ -125,9 +126,10 @@ class CameraScreenState extends State<CameraScreen>
             )
             )
           ),
-          Positioned(
-            top: 70.0,
-            left: 318.0,
+          Container(
+            margin: new EdgeInsets.all(1),
+            height: SizeConfig.safeBlockVertical * 15,
+            width: 550,
             child: IconButton(
               iconSize: 28,
               icon: Icon(
@@ -137,6 +139,7 @@ class CameraScreenState extends State<CameraScreen>
               onPressed: () {
                 _onCameraSwitch();
               },
+              alignment: Alignment(.7, 0.5),
             ),
           ),
         ],
@@ -200,7 +203,7 @@ class CameraScreenState extends State<CameraScreen>
             },
           ),
           CircleAvatar(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white10,
             radius: 28.0,
             child: IconButton(
               icon: Icon(
@@ -208,7 +211,7 @@ class CameraScreenState extends State<CameraScreen>
                     ? (_isRecording) ? Icons.stop : Icons.videocam
                     : Icons.camera_alt,
                 size: 28.0,
-                color: (_isRecording) ? Colors.red : Colors.black,
+                color: (_isRecording) ? Colors.red : Colors.white,
               ),
               onPressed: () {
                 if (!_isRecordingMode) {
