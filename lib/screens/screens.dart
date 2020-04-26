@@ -4,3 +4,4 @@ export 'activity.dart';
 export 'profile.dart';
 export 'discover.dart';
 export 'responses.dart';
+export 'upload.dart';
