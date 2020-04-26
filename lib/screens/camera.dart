@@ -1,15 +1,15 @@
+  
 import 'dart:io';
 
+import 'package:Sycle/camera/video_timer.dart';
 import 'package:Sycle/screens/upload.dart';
-import 'package:Sycle/shared/scale_route.dart';
-import 'package:Sycle/shared/size_config.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:thumbnails/thumbnails.dart';
-
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key key}) : super(key: key);
@@ -25,6 +25,7 @@ class CameraScreenState extends State<CameraScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isRecordingMode = false;
   bool _isRecording = false;
+  final _timerKey = GlobalKey<VideoTimerState>();
 
   @override
   void initState() {
@@ -76,72 +77,28 @@ class CameraScreenState extends State<CameraScreen>
       body: Stack(
         children: <Widget>[
           _buildCameraPreview(),
-           Container(
-            //topBar
-            height: 80,
-            child: Expanded(child: Row(children: <Widget>[
-              Container(
-                margin: new EdgeInsets.all(1),
-                width: 100,
-                child: IconButton(
-                  icon: Icon(Icons.close),
-                  iconSize: 28,
-                  color: Colors.white,
-                  onPressed: () {
-                    {
-                  Navigator.pop(context);
-                    }
-                  },
-                ),
-                alignment: Alignment(-0.7, 0.5),
-              ),
-              Expanded(
-                child: Container(
-                  margin: new EdgeInsets.all(1),
-                  child: Text('Respond to topic',
-                style: TextStyle(
-                  fontFamily: 'Avenir',
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.white),
-                ),
-                alignment: Alignment(0, 0.35), 
-                  )),
-              Container(
-                margin: new EdgeInsets.all(1),
-                width: 100,
-                child: IconButton(
-                  icon: Icon(Icons.switch_camera),
-                  color: Colors.white,
-                  iconSize: 28,
-                  onPressed: () {
-                    {
-                  _onCameraSwitch();
-                    }
-                  },
-                ),
-                alignment: Alignment(.7, 0.5),
-              )
-            ],
-            )
-            )
-          ),
-          Container(
-            margin: new EdgeInsets.all(1),
-            height: SizeConfig.safeBlockVertical * 15,
-            width: 550,
+          Positioned(
+            top: 24.0,
+            left: 12.0,
             child: IconButton(
-              iconSize: 28,
               icon: Icon(
-                Icons.flash_on,
+                Icons.switch_camera,
                 color: Colors.white,
               ),
               onPressed: () {
                 _onCameraSwitch();
               },
-              alignment: Alignment(.7, 0.5),
             ),
           ),
+          if (_isRecordingMode)
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 32.0,
+              child: VideoTimer(
+                key: _timerKey,
+              ),
+            )
         ],
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
@@ -203,7 +160,7 @@ class CameraScreenState extends State<CameraScreen>
             },
           ),
           CircleAvatar(
-            backgroundColor: Colors.white10,
+            backgroundColor: Colors.white,
             radius: 28.0,
             child: IconButton(
               icon: Icon(
@@ -211,7 +168,7 @@ class CameraScreenState extends State<CameraScreen>
                     ? (_isRecording) ? Icons.stop : Icons.videocam
                     : Icons.camera_alt,
                 size: 28.0,
-                color: (_isRecording) ? Colors.red : Colors.white,
+                color: (_isRecording) ? Colors.red : Colors.black,
               ),
               onPressed: () {
                 if (!_isRecordingMode) {
@@ -309,6 +266,7 @@ class CameraScreenState extends State<CameraScreen>
     setState(() {
       _isRecording = true;
     });
+    _timerKey.currentState.startTimer();
 
     final Directory extDir = await getApplicationDocumentsDirectory();
     final String dirPath = '${extDir.path}/media';
@@ -334,6 +292,10 @@ class CameraScreenState extends State<CameraScreen>
     if (!_controller.value.isRecordingVideo) {
       return null;
     }
+    _timerKey.currentState.stopTimer();
+    setState(() {
+      _isRecording = false;
+    });
 
     try {
       await _controller.stopVideoRecording();
