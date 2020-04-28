@@ -1,12 +1,10 @@
-  
 import 'dart:io';
 
 import 'package:Sycle/camera/video_timer.dart';
-import 'package:Sycle/screens/upload.dart';
+import 'package:Sycle/screens/screens.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:thumbnails/thumbnails.dart';
@@ -77,8 +75,58 @@ class CameraScreenState extends State<CameraScreen>
       body: Stack(
         children: <Widget>[
           _buildCameraPreview(),
+           Container(
+            //topBar
+            height: 80,
+            child: Expanded(child: Row(children: <Widget>[
+              Container(
+                margin: new EdgeInsets.all(1),
+                width: 100,
+                child: IconButton(
+                  icon: Icon(Icons.close),
+                  iconSize: 28,
+                  color: Colors.white,
+                  onPressed: () {
+                    {
+                  Navigator.pop(context);
+                    }
+                  },
+                ),
+                alignment: Alignment(-0.7, 0.5),
+              ),
+              Expanded(
+                child: Container(
+                  margin: new EdgeInsets.all(1),
+                  child: Text('Respond to topic',
+                style: TextStyle(
+                  fontFamily: 'Avenir',
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                color: Colors.white),
+                ),
+                alignment: Alignment(0, 0.35),
+                  )),
+              Container(
+                margin: new EdgeInsets.all(1),
+                width: 100,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  color: Colors.white,
+                  iconSize: 28,
+                  onPressed: () {
+                    {
+                  Navigator.pushNamed(context, '/upload');
+                    }
+                  },
+                ),
+                alignment: Alignment(.7, 0.5),
+              )
+            ],
+            )
+            )
+          ),
           Positioned(
-            top: 24.0,
+            top: 240.0,
             left: 12.0,
             child: IconButton(
               icon: Icon(
@@ -94,7 +142,7 @@ class CameraScreenState extends State<CameraScreen>
             Positioned(
               left: 0,
               right: 0,
-              top: 32.0,
+              top: 320.0,
               child: VideoTimer(
                 key: _timerKey,
               ),
@@ -124,6 +172,7 @@ class CameraScreenState extends State<CameraScreen>
 
   Widget _buildBottomNavigationBar() {
     return Container(
+      color: Colors.transparent,
       height: 100.0,
       width: double.infinity,
       child: Row(

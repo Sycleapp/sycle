@@ -1,6 +1,4 @@
 //This is the UI for the responces for a story
-import 'package:Sycle/screens/screens.dart';
-import 'package:Sycle/shared/scale_route.dart';
 import 'package:flutter/material.dart';
 import 'package:Sycle/shared/size_config.dart';
 
@@ -63,7 +61,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                   iconSize: 28,
                   onPressed: () {
                     {
-                  Navigator.push(context, ScaleRoute(page: CameraScreen()));
+                  Navigator.pushNamed(context, '/camera');
                     }
                   },
                 ),

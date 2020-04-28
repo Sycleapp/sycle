@@ -41,7 +41,7 @@ class VideoTimerState extends State<VideoTimer> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: const Color(0x40000000),
+          color: Colors.white10,
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -51,13 +51,13 @@ class VideoTimerState extends State<VideoTimer> {
               Icon(
                 Icons.fiber_manual_record,
                 size: 16.0,
-                color: Colors.red,
+                color: Colors.white,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 4.0, right: 4.0),
                 child: Text(
                   timeFormatter(Duration(seconds: _start)),
-                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
               ),

@@ -16,10 +16,27 @@ class _UploadScreenState extends State<UploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.black,
-      ),
+        brightness: Brightness.dark, 
+        iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: (){
+                  Navigator.pushNamed(context, '/profile');
+                },
+              ),
+              title: Text("Post",
+              style: TextStyle(
+                fontFamily: "Avenir",
+                fontWeight: FontWeight.w900,
+                color: Colors.white
+              )),
+              elevation: 0,
+            ),
       body: FutureBuilder(
         future: _getAllImages(),
         builder: (context, AsyncSnapshot<List<FileSystemEntity>> snapshot) {
