@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:Sycle/camera/video_preview.dart';
+import 'package:Sycle/shared/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -17,27 +18,30 @@ class _UploadScreenState extends State<UploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        brightness: Brightness.dark, 
+        backgroundColor: Colors.white,
+        brightness: Brightness.light, 
         iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
+            color: Colors.black, //change your color here
           ),
               centerTitle: true,
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: (){
-                  Navigator.pushNamed(context, '/profile');
+                  Navigator.pushNamed(context, '/camera');
                 },
               ),
               title: Text("Post",
               style: TextStyle(
                 fontFamily: "Avenir",
                 fontWeight: FontWeight.w900,
-                color: Colors.white
+                color: Colors.black
               )),
               elevation: 0,
             ),
-      body: FutureBuilder(
+      body: Column(
+        children: <Widget>[
+          //How to show video, keep the image code inside for future updates. You can just comment it our.
+      FutureBuilder(
         future: _getAllImages(),
         builder: (context, AsyncSnapshot<List<FileSystemEntity>> snapshot) {
           if (!snapshot.hasData || snapshot.data.isEmpty) {
@@ -72,9 +76,45 @@ class _UploadScreenState extends State<UploadScreen> {
           );
         },
       ),
-      bottomNavigationBar: BottomAppBar(
+      //Display playback inside of this container
+      Container(color: Colors.blue,
+      width: SizeConfig.safeBlockHorizontal * 85,
+      height: SizeConfig.safeBlockVertical * 70,),
+      //Caption and Location. Still needs to open a keyboard and have max characters so no clipping widgets
+      Container(
+      margin: new EdgeInsets.all(1),
+      width: SizeConfig.safeBlockHorizontal * 95,
+      child: TextField(decoration: new InputDecoration(
+        hintText: 'Add a Caption'
+      ),
+      ),
+      ),
+      Container(
+      margin: new EdgeInsets.all(1),
+      width: SizeConfig.safeBlockHorizontal * 95,
+      child: TextField(decoration: new InputDecoration(
+        hintText: 'Add a Location'
+      ),),
+      ),
+      //Post button. Needs to add function and then go back to responces once complete
+      Container(height: SizeConfig.safeBlockVertical * 4,),
+      Container(
+      margin: new EdgeInsets.all(5),
+      width: SizeConfig.safeBlockHorizontal * 55,
+      height: SizeConfig.safeBlockVertical * 4,
+      decoration: BoxDecoration(
+      borderRadius: new BorderRadius.circular(30.0),
+      color: Colors.red
+      )
+      )
+        ]
+          ),
+      
+        
+    
+      /* bottomNavigationBar: BottomAppBar(
         child: Container(
-          height: 56.0,
+          height: 60.0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -83,13 +123,13 @@ class _UploadScreenState extends State<UploadScreen> {
                 onPressed: () => _shareFile(),
               ),
               IconButton(
-                icon: Icon(Icons.delete),
+                icon: Icon(Icons.file_upload),
                 onPressed: _deleteFile,
               ),
             ],
           ),
         ),
-      ),
+      ), */
     );
   }
 

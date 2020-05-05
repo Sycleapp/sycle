@@ -31,6 +31,8 @@ dev_dependencies:
   provider: ^4.0.4
   http: 0.12.0+1
   path: ^1.6.4
+
+  flutter_statusbarcolor: ^0.2.3
   
   firebase: ^7.3.0
   firebase_auth: ^0.15.3+1
@@ -41,6 +43,8 @@ dev_dependencies:
   rxdart: ^0.18.1
   cached_network_image: ^2.0.0
   font_awesome_flutter: ^8.5.0
+
+  image_picker: ^0.6.5+3
 
   camera: ^0.5.4+2
   video_player: ^0.10.8+1

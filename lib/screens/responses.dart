@@ -61,7 +61,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                   iconSize: 28,
                   onPressed: () {
                     {
-                  Navigator.pushNamed(context, '/camera');
+                  Navigator.pushNamed(context, '/responces');
                     }
                   },
                 ),
@@ -100,7 +100,6 @@ class _ResponseScreenState extends State<ResponseScreen> {
           ),
           //Main area
           Container(
-            height:SizeConfig.safeBlockVertical * 73,
             child: Expanded(child: Row(children: <Widget>[
             //Tap for previous item
             Container(
@@ -125,15 +124,26 @@ class _ResponseScreenState extends State<ResponseScreen> {
               color: Colors.yellow,
               alignment: Alignment(.7, 0.5),
             ),
-          ],)),
-          ),
+          ],))),
           //Bottom UI
           Container(
-            margin: new EdgeInsets.all(1),
-            color: Colors.black,
+            margin: new EdgeInsets.all(3),
             child: Text('Caption',
             style: TextStyle(
               color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 18
+              ),
+            ),
+            alignment: Alignment(-.85, 0.5),
+          ),
+
+          Container(
+            margin: new EdgeInsets.all(3),
+            height: SizeConfig.safeBlockVertical * 5,
+            child: Text('SEXY',
+            style: TextStyle(
+              color: Colors.transparent,
               fontWeight: FontWeight.w600,
               fontSize: 18
               ),
