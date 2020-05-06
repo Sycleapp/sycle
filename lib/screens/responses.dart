@@ -61,7 +61,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
                   iconSize: 28,
                   onPressed: () {
                     {
-                  Navigator.pushNamed(context, '/responces');
+                  Navigator.pushNamed(context, '/camera');
                     }
                   },
                 ),

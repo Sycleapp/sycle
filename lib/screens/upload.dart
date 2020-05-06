@@ -77,9 +77,12 @@ class _UploadScreenState extends State<UploadScreen> {
         },
       ),
       //Display playback inside of this container
-      Container(color: Colors.blue,
-      width: SizeConfig.safeBlockHorizontal * 85,
-      height: SizeConfig.safeBlockVertical * 70,),
+      Container(
+      decoration: BoxDecoration(
+        borderRadius: new BorderRadius.circular(30.0),
+      color: Colors.black),
+      width: SizeConfig.safeBlockHorizontal * 80,
+      height: SizeConfig.safeBlockVertical * 65,),
       //Caption and Location. Still needs to open a keyboard and have max characters so no clipping widgets
       Container(
       margin: new EdgeInsets.all(1),
@@ -99,17 +102,28 @@ class _UploadScreenState extends State<UploadScreen> {
       //Post button. Needs to add function and then go back to responces once complete
       Container(height: SizeConfig.safeBlockVertical * 4,),
       Container(
-      margin: new EdgeInsets.all(5),
-      width: SizeConfig.safeBlockHorizontal * 55,
-      height: SizeConfig.safeBlockVertical * 4,
+      margin: new EdgeInsets.all(1),
+      width: SizeConfig.safeBlockHorizontal * 30,
+      height: SizeConfig.safeBlockVertical * 5,
+      child: Center( 
+        child: Text('Post',
+        textAlign: TextAlign.center,
+           style: TextStyle(
+            fontFamily: 'avenir',
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+      ),
+      ),
       decoration: BoxDecoration(
       borderRadius: new BorderRadius.circular(30.0),
-      color: Colors.red
-      )
-      )
-        ]
-          ),
+      color: const Color(0xFF0037FF),
       
+                          )
+                        )
+                      ]
+                    )
         
     
       /* bottomNavigationBar: BottomAppBar(
