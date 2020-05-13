@@ -1,4 +1,5 @@
 import 'package:Sycle/screens/responses.dart';
+import 'package:Sycle/screens/upload.dart';
 import 'package:flutter/material.dart';
 import 'package:Sycle/services/models.dart';
 import 'package:provider/provider.dart';
@@ -98,7 +99,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
           Navigator.push(
             context,
         //MaterialPageRoute(builder: (context) => CameraExampleHome())) //test code to route to camera.dart
-            MaterialPageRoute(builder: (context) => ResponseScreen(data.id)))
+            MaterialPageRoute(builder: (context) => ResponseScreen(data)))
+            //MaterialPageRoute(builder: (context) => UploadScreen(data)))
       },
       child: Container(
         margin: new EdgeInsets.all(7),

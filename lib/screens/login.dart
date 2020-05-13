@@ -16,8 +16,8 @@ class LoginScreenState extends State<LoginScreen> {
     auth.getUser.then(
       (user) {
         if (user != null) {
-          //Navigator.pushReplacementNamed(context, '/discover');
-          Navigator.pushReplacementNamed(context, '/upload');
+          Navigator.pushReplacementNamed(context, '/discover');
+          //Navigator.pushReplacementNamed(context, '/upload');
         }
       },
     );
@@ -108,8 +108,8 @@ class LoginButton extends StatelessWidget {
         onPressed: () async {
           var user = await loginMethod();
           if (user != null) {
-            //Navigator.pushReplacementNamed(context, '/discover');
-            Navigator.pushReplacementNamed(context, '/upload');
+            Navigator.pushReplacementNamed(context, '/discover');
+            //Navigator.pushReplacementNamed(context, '/upload');
           }
         },
         label: Expanded(

@@ -1,4 +1,5 @@
 //This is the UI for the responces for a story
+import 'package:Sycle/screens/webview.dart';
 import 'package:Sycle/services/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -12,16 +13,21 @@ import 'package:like_button/like_button.dart';
 import 'package:Sycle/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:async';
+import 'package:Sycle/screens/upload.dart';
+
 class ResponseScreen extends StatefulWidget {
-  final String sid;
+  final Story story;
   
-  ResponseScreen(this.sid);
+  ResponseScreen(this.story);
 
   @override
   _ResponseScreenState createState() => _ResponseScreenState();
 }
 
 class _ResponseScreenState extends State<ResponseScreen> {
+  int currentPage = 0;
   PageController _controller = PageController(
     initialPage: 0,
   );
@@ -40,7 +46,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
   @override
   Widget build(BuildContext context) {
     //take storyID passed in from previous discover page
-    String reactionSID = widget.sid;
+    String reactionSID = widget.story.id;
 
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('stories').document(reactionSID).collection('reactions').snapshots(),
@@ -52,6 +58,19 @@ class _ResponseScreenState extends State<ResponseScreen> {
   }
 
   Widget _buildReactionSlide(BuildContext context, List<DocumentSnapshot> reactions){
+    print("CURRENT PAGE BEFORE: $currentPage");
+    Timer.periodic(Duration(seconds: 30), (Timer time){
+      print("CHANGING CURRENT PAGE: $currentPage");
+      if(currentPage < reactions.length){
+        currentPage++;
+      }
+
+    print("CURRENT PAGE AFTER: $currentPage");
+    _controller.animateToPage(currentPage, duration: Duration(microseconds: 1200), curve: Curves.easeIn);
+    print(DateTime.now());
+      
+    });
+    
     return PageView(
       controller: _controller,
       children: reactions.map((data) => _buildVideoReaction(context, data)).toList()
@@ -62,8 +81,60 @@ class _ResponseScreenState extends State<ResponseScreen> {
     FirebaseUser user = Provider.of<FirebaseUser>(context);
     print("USERID ${user.uid}");
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.close),
+          iconSize: 32.0,
+          onPressed: (){
+            Navigator.pushNamed(context, '/discover');
+          },
+        ),
+        title: GestureDetector(
+          child: Text(
+            reaction['storyTitle'],
+            style: TextStyle(
+              fontFamily: "Avenir",
+              fontWeight: FontWeight.w800,
+              color: Colors.white
+            )
+          ),
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => WebViewPage(
+                displayTitle: reaction['storyTitle'],
+                urlToLoad: 'https://www.nytimes.com/'
+              )
+            ))
+          }
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add_circle_outline),
+            iconSize: 32.0,
+            onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UploadScreen(widget.story))
+              );
+            }
+          )
+        ],
+      ),
       body: FutureBuilder<String>(
+            future: imageRef(reaction['video']),
+            builder: (context,snapshotURL){
+              if(!snapshotURL.hasData){
+                print('IMAGE NOT FOUND!!!!');
+                return Image.asset('assets/images/logo.png');
+              }
+              
+      //uncomment to play videos
+      /* body: FutureBuilder<String>(
         future: videoRef(reaction['video']),
         builder: (context, snapshotURL){
           if(!snapshotURL.hasData) return _defaultReactionSlide();
@@ -71,7 +142,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
           ..initialize().then((_){
             _videoController.play();
             _videoController.setLooping(true);
-          });
+          });*/
           return Stack(
             children:[
               SizedBox.expand(
@@ -80,16 +151,18 @@ class _ResponseScreenState extends State<ResponseScreen> {
                   child: SizedBox(
                     width: 450,
                     height: 500,
-                    child: VideoPlayer(_videoController)
+                    child: _imageLoader(snapshotURL)
+                    //child: VideoPlayer(_videoController)
                   )
                 )
-              ),
+              ), 
               Container(
                 padding: EdgeInsets.all(30.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children:[
+                    SizedBox(height: 45.0),
                     TopFirstRow(reaction['displayName']),  
                     TopSecondRow(reaction['location']),
                     Expanded(
@@ -158,6 +231,15 @@ Widget _defaultReactionSlide(){
   );      
 }
 
+Widget _imageLoader(AsyncSnapshot snapshot){
+  print("DISPLAYING IMAGE: ${snapshot.data}");
+  return CachedNetworkImage(
+    imageUrl: snapshot.data,
+    placeholder: (context,url) => LinearProgressIndicator(),
+    errorWidget: (context,url,error) => Image.asset('assets/images/logo.png')
+  );
+}
+
 
 class TopFirstRow extends StatelessWidget{
   final String displayName;
@@ -166,24 +248,14 @@ class TopFirstRow extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children:[
-        Text(
-          displayName, 
-          style: TextStyle(
-            fontFamily: "Avenir",
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-            fontSize: 22,
-          )
-        ),
-        Icon(
-          Icons.add_circle_outline,
-          size: 32.0,
-          color: Colors.white
-        )  
-      ]
+    return Text(
+      displayName, 
+      style: TextStyle(
+        fontFamily: "Avenir",
+        fontWeight: FontWeight.w800,
+        color: Colors.white,
+        fontSize: 22,
+      )
     );
   }    
 }
@@ -228,6 +300,14 @@ Future<String> videoRef(String vidPath) async{
   return downloadURL;
 } 
 
+//helper function to download image from Firebase Storage and set it as the image path
+  //use a FutureBuilder to deal with async/await issues
+  Future<String> imageRef(String imgPath) async{
+    var imgRef = FirebaseStorage.instance.ref().child(imgPath);
+    print(imgRef);
+    var downloadURL = await imgRef.getDownloadURL();
+    return downloadURL;
+  } 
 
 
 class BottomFirstRow extends StatelessWidget{
