@@ -81,13 +81,15 @@ class _UploadScreenState extends State<UploadScreen> {
       decoration: BoxDecoration(
         borderRadius: new BorderRadius.circular(30.0),
       color: Colors.black),
-      width: SizeConfig.safeBlockHorizontal * 80,
-      height: SizeConfig.safeBlockVertical * 65,),
+      width: SizeConfig.safeBlockHorizontal * 70,
+      height: SizeConfig.safeBlockVertical * 55,),
       //Caption and Location. Still needs to open a keyboard and have max characters so no clipping widgets
       Container(
       margin: new EdgeInsets.all(1),
       width: SizeConfig.safeBlockHorizontal * 95,
-      child: TextField(decoration: new InputDecoration(
+      child: TextField(
+        maxLength: 50,
+        decoration: new InputDecoration(
         hintText: 'Add a Caption'
       ),
       ),
@@ -95,7 +97,9 @@ class _UploadScreenState extends State<UploadScreen> {
       Container(
       margin: new EdgeInsets.all(1),
       width: SizeConfig.safeBlockHorizontal * 95,
-      child: TextField(decoration: new InputDecoration(
+      child: TextField(
+        maxLength: 150,
+        decoration: new InputDecoration(
         hintText: 'Add a Location'
       ),),
       ),
