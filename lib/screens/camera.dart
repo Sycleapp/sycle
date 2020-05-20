@@ -88,7 +88,7 @@ class CameraScreenState extends State<CameraScreen>
                   color: Colors.white,
                   onPressed: () {
                     {
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/responses');
                     }
                   },
                 ),
@@ -115,7 +115,7 @@ class CameraScreenState extends State<CameraScreen>
                   iconSize: 28,
                   onPressed: () {
                     {
-                  Navigator.pushNamed(context, '/upload');
+                  Navigator.pushNamed(context, '/preview');
                     }
                   },
                 ),

@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
           '/responces': (context) => ResponseScreen(),
           '/camera': (context) => CameraScreen(),
           '/upload': (context) => UploadScreen(),
+          '/preview': (context) => PreviewScreen(),
         }
     );
   }
