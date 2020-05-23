@@ -51,7 +51,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('stories').document(reactionSID).collection('reactions').snapshots(),
       builder: (context, snapshot){
-        if(!snapshot.hasData || snapshot.data.documents.length == 0) return _defaultReactionSlide();
+        if(!snapshot.hasData || snapshot.data.documents.length == 0) return _defaultReactionSlide(context);
         return _buildReactionSlide(context, snapshot.data.documents);
       }
     );
@@ -63,6 +63,11 @@ class _ResponseScreenState extends State<ResponseScreen> {
       print("CHANGING CURRENT PAGE: $currentPage");
       if(currentPage < reactions.length){
         currentPage++;
+      }
+
+      //cancel timer after no more pages
+      if(currentPage == reactions.length - 1){
+        time.cancel();
       }
 
     print("CURRENT PAGE AFTER: $currentPage");
@@ -104,10 +109,13 @@ class _ResponseScreenState extends State<ResponseScreen> {
             )
           ),
           onTap: () => {
+            //TODO: Pause video on clicking the link
+            //TODO: Pause timer on clicking the link
             Navigator.of(context).push(MaterialPageRoute(
+              //Plugin to open webpage within app
               builder: (BuildContext context) => WebViewPage(
                 displayTitle: reaction['storyTitle'],
-                urlToLoad: 'https://www.nytimes.com/'
+                urlToLoad: 'https://www.nytimes.com/' //this will be the URL to load in the app (default now is New York Times)
               )
             ))
           }
@@ -119,30 +127,32 @@ class _ResponseScreenState extends State<ResponseScreen> {
             onPressed: (){
               Navigator.push(
                 context,
+                //UploadScreen has access to Story data so that upload can write data to Firestore 
                 MaterialPageRoute(builder: (context) => UploadScreen(widget.story))
               );
             }
           )
         ],
       ),
-      body: FutureBuilder<String>(
+      //uncomment to play images
+      /* body: FutureBuilder<String>(
             future: imageRef(reaction['video']),
             builder: (context,snapshotURL){
               if(!snapshotURL.hasData){
                 print('IMAGE NOT FOUND!!!!');
                 return Image.asset('assets/images/logo.png');
-              }
+              } */
               
       //uncomment to play videos
-      /* body: FutureBuilder<String>(
+      body: FutureBuilder<String>(
         future: videoRef(reaction['video']),
         builder: (context, snapshotURL){
-          if(!snapshotURL.hasData) return _defaultReactionSlide();
+          if(!snapshotURL.hasData) return _defaultReactionSlide(context);
           _videoController = VideoPlayerController.network(snapshotURL.data)
           ..initialize().then((_){
             _videoController.play();
             _videoController.setLooping(true);
-          });*/
+          });
           return Stack(
             children:[
               SizedBox.expand(
@@ -151,8 +161,8 @@ class _ResponseScreenState extends State<ResponseScreen> {
                   child: SizedBox(
                     width: 450,
                     height: 500,
-                    child: _imageLoader(snapshotURL)
-                    //child: VideoPlayer(_videoController)
+                    //child: _imageLoader(snapshotURL)
+                    child: VideoPlayer(_videoController)
                   )
                 )
               ), 
@@ -187,29 +197,38 @@ class _ResponseScreenState extends State<ResponseScreen> {
       )
     );      
   }   
-      
-    /* return Dismissible(
-    direction: DismissDirection.vertical,
-    key: Key('key'),
-    onDismissed: (_) => Navigator.of(context).pop(DiscoverPage),
-      child: Container(
-      color: Colors.green,
-        child: Container(
-  
-        ),
-      )
-    ); */
 }
 
-Widget _defaultReactionSlide(){
+Widget _defaultReactionSlide(BuildContext context){
   return Scaffold(
+    extendBodyBehindAppBar: true,
     backgroundColor: Colors.black,
+    appBar: AppBar(
+      centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text('Title of Story',
+          style: TextStyle(
+            fontFamily: "Avenir",
+            fontWeight: FontWeight.w900,
+            color: Colors.white
+          )
+        )
+      ),
     body: Container(
       padding: EdgeInsets.all(30.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children:[
+          SizedBox(height: 45.0),
           TopFirstRow("Felix"),  
           TopSecondRow("Mars"),
           Expanded(
@@ -231,14 +250,15 @@ Widget _defaultReactionSlide(){
   );      
 }
 
-Widget _imageLoader(AsyncSnapshot snapshot){
+//for loading images
+/* Widget _imageLoader(AsyncSnapshot snapshot){
   print("DISPLAYING IMAGE: ${snapshot.data}");
   return CachedNetworkImage(
     imageUrl: snapshot.data,
     placeholder: (context,url) => LinearProgressIndicator(),
     errorWidget: (context,url,error) => Image.asset('assets/images/logo.png')
   );
-}
+} */
 
 
 class TopFirstRow extends StatelessWidget{

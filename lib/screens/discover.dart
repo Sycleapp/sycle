@@ -66,6 +66,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
     List<Story> stories = Provider.of<List<Story>>(context);
 
     //first iteration of Firebase connection
+    //code for when not using provider library
     /*  return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('stories').snapshots(),
       builder: (context, snapshot){
@@ -92,15 +93,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
     );
   }     
 
+  //code for when not using provider library
   //Widget _buildNewsFeedItem(BuildContext context, DocumentSnapshot data){
   Widget _buildNewsFeedItem(BuildContext context, Story data){
     return GestureDetector(
       onTap: () => {
           Navigator.push(
             context,
-        //MaterialPageRoute(builder: (context) => CameraExampleHome())) //test code to route to camera.dart
             MaterialPageRoute(builder: (context) => ResponseScreen(data)))
-            //MaterialPageRoute(builder: (context) => UploadScreen(data)))
       },
       child: Container(
         margin: new EdgeInsets.all(7),
@@ -121,7 +121,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
                         image: imageProvider,
-                        //fit: BoxFit.cover
                         fit: BoxFit.fitHeight,
                         alignment: Alignment.bottomLeft
                       )

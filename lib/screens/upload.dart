@@ -52,9 +52,8 @@ class _UploadScreenState extends State<UploadScreen> {
 
   Future<void> uploadToFirebaseStorage(File video, FirebaseUser user) async{
     String basename = p.basename(video.path);
-    String filePath = "reactions/test/$basename";
+    String filePath = "reactions/test/$basename"; //this will store data under this path in Firebase Storage
     StorageReference storageRef = FirebaseStorage.instance.ref().child(filePath);
-    //StorageReference storageRef = FirebaseStorage.instance.ref().child("test/$basename-TEST-2");
     storageRef.putFile(video);
     //final StorageUploadTask uploadTask = storageRef.putFile(video);
     writeToFirebase(filePath, user);
