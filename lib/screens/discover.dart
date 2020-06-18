@@ -1,53 +1,39 @@
-import 'package:Sycle/screens/responses.dart';
+import 'package:Sycle/screens/screens.dart';
 import 'package:Sycle/shared/scale_route.dart';
 import 'package:flutter/material.dart';
 
-class DiscoverPage extends StatefulWidget {
+class DiscoverScreen extends StatefulWidget {
   @override
-  _DiscoverPageState createState() => _DiscoverPageState();
+  _DiscoverScreenState createState() => _DiscoverScreenState();
 }
 
-class _DiscoverPageState extends State<DiscoverPage> {
+class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light, 
+      backgroundColor: Colors.black,
+        appBar: AppBar(
+        backgroundColor: Colors.black,
+        brightness: Brightness.dark, 
         iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
+            color: Colors.white, //change your color here
           ),
-              centerTitle: true,
-              leading: IconButton(
-                icon: Icon(Icons.account_circle),
-                onPressed: (){
-                  Navigator.pushNamed(context, '/profile');
-                },
-              ),
-              title: Text("Discover",
-              style: TextStyle(
-                fontFamily: "Avenir",
-                fontWeight: FontWeight.w900,
-                color: Colors.black
-              )),
-              backgroundColor: Colors.white,
-              elevation: 0,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.notifications),
-                  onPressed: () {
-                    {
-                  Navigator.pushNamed(context, '/activity');
-                    }
-                  },
-                ),
-              ],
-            ),
+           elevation: .2,
+         title: Text('Discover',
+         style: TextStyle(
+           color: Colors.white,
+           fontFamily: "Avenir",
+          fontWeight: FontWeight.w900,
+         ),
+        ),
+      ),
+      
 
       //Card UI, put this into your card code for the Frontend UI. 
      body: Center(
        child: Card(
          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: new AspectRatio(aspectRatio: 450 / 600,
+            child: new AspectRatio(aspectRatio: 450 / 700,
         //Remove this when you put it into a listview. This is just test code
               child: InkWell(
               onTap: () => Navigator.push(context, ScaleRoute(page: ResponseScreen())),
@@ -66,7 +52,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 //Text
                 child: Column(
                   children: <Widget>[
-                    new AspectRatio(aspectRatio: 450 / 520),
+                    new AspectRatio(aspectRatio: 450 / 620),
                     //Catagory
                     Container(
                       child: new Text(

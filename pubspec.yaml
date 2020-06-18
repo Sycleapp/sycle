@@ -57,9 +57,10 @@ dev_dependencies:
   flutter_launcher_icons: ^0.7.4
   
 flutter_icons:
-  image_path: 'assets/images/Logo.png'
+  image_path_ios: 'assets/images/Blue2.png'
+  image_path_android: 'assets/images/Blue2.png'
+  android: true
   ios: true
-  andriod: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -78,16 +79,27 @@ flutter:
     - assets/images/google_logo.png
     - assets/images/google_logo2.png
     - assets/images/google_logo3.png
-    - assets/images/logo.png
     - assets/images/TestCard.jpg
     - assets/images/testcard2.jpg
     - assets/images/Card2.png
     - assets/images/LogoWhiteNB.png
     - assets/images/camera.png
+    - assets/images/Logo.jpg
+    - assets/images/Logo12NB.png
+    - assets/images/Logo13.png
+    - assets/images/LogoJune.png
+    - assets/images/LogoJune2.png
+    - assets/images/LogoJune3.png
+    - assets/images/JuneLogo4.png
+    - assets/images/Yellow.png
+    - assets/images/Blue.png
+    - assets/images/Blue2.png
+    - assets/images/Capture.png
+    - assets/images/Gallery.png
+    - assets/images/LogoTest4.png
 
     #icons
     - assets/icon/LikeIconActivity.png
-    
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -17,13 +17,14 @@ class MyApp extends StatelessWidget {
         // Named Routes
         routes: {
           '/': (context) => LoginScreen(),
-          '/discover': (context) => DiscoverPage(),
+          '/discover': (context) => DiscoverScreen(),
           '/profile': (context) => ProfileScreen(),
           '/activity': (context) => ActivityScreen(),
           '/responces': (context) => ResponseScreen(),
-          '/camera': (context) => CameraScreen(),
           '/upload': (context) => UploadScreen(),
           '/preview': (context) => PreviewScreen(),
+          '/explore': (context) => ExploreScreen(),
+          '/create': (context) => CreateScreen(),
         }
     );
   }

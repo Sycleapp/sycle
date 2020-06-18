@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Sycle/camera/video_timer.dart';
 import 'package:Sycle/screens/screens.dart';
+import 'package:Sycle/shared/size_config.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,40 +76,45 @@ class CameraScreenState extends State<CameraScreen>
       body: Stack(
         children: <Widget>[
           _buildCameraPreview(),
-           Container(
+            Container(
             //topBar
-            height: 80,
-            child: Expanded(child: Row(children: <Widget>[
+            color: Colors.transparent,
+            height: SizeConfig.safeBlockVertical * 12,
+            
+            child: Center(child: Row(children: <Widget>[
               Container(
-                margin: new EdgeInsets.all(1),
-                width: 100,
+                margin: new EdgeInsets.all(3),
+                width: SizeConfig.safeBlockHorizontal * 8,
+                color: Colors.transparent,
                 child: IconButton(
                   icon: Icon(Icons.close),
                   iconSize: 28,
                   color: Colors.white,
                   onPressed: () {
                     {
-                  Navigator.pushNamed(context, '/responses');
+                  Navigator.pushNamed(context, '/responces');
                     }
                   },
                 ),
-                alignment: Alignment(-0.7, 0.5),
+                alignment: Alignment.center
               ),
-              Expanded(
-                child: Container(
-                  margin: new EdgeInsets.all(1),
-                  child: Text('Respond to topic',
-                style: TextStyle(
-                  fontFamily: 'Avenir',
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.white),
-                ),
-                alignment: Alignment(0, 0.35),
-                  )),
               Container(
-                margin: new EdgeInsets.all(1),
-                width: 100,
+                  width: SizeConfig.safeBlockHorizontal * 78,
+                
+                  color: Colors.transparent,
+                  child: Text('Respond',
+                    style: TextStyle(
+                    fontFamily: 'Avenir',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.white),
+                ),
+                alignment: Alignment.center
+                  ),
+              Container(
+                margin: new EdgeInsets.all(3),
+                width: SizeConfig.safeBlockHorizontal * 8,
+                color: Colors.transparent,
                 child: IconButton(
                   icon: Icon(Icons.arrow_forward),
                   color: Colors.white,
@@ -119,7 +125,7 @@ class CameraScreenState extends State<CameraScreen>
                     }
                   },
                 ),
-                alignment: Alignment(.7, 0.5),
+                alignment: Alignment.center
               )
             ],
             )
@@ -192,17 +198,6 @@ class CameraScreenState extends State<CameraScreen>
                   context,
                   MaterialPageRoute(
                     builder: (context) => UploadScreen(),
-                  ),
-                ),
-                child: Container(
-                  width: 40.0,
-                  height: 40.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4.0),
-                    child: Image.file(
-                      snapshot.data,
-                      fit: BoxFit.cover,
-                    ),
                   ),
                 ),
               );

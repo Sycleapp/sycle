@@ -16,7 +16,7 @@ class LoginScreenState extends State<LoginScreen> {
     auth.getUser.then(
       (user) {
         if (user != null) {
-          Navigator.pushReplacementNamed(context, '/discover');
+          Navigator.pushReplacementNamed(context, '/responces');
         }
       },
     );
@@ -43,7 +43,7 @@ class LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/LogoWhiteNB.png',
+            Image.asset('assets/images/LogoJune2.png',
             scale: 10,),
             SizedBox(
               height: 30,
@@ -107,7 +107,7 @@ class LoginButton extends StatelessWidget {
         onPressed: () async {
           var user = await loginMethod();
           if (user != null) {
-            Navigator.pushReplacementNamed(context, '/discover');
+            Navigator.pushReplacementNamed(context, '/responses');
           }
         },
         label: Expanded(
