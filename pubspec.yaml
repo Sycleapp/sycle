@@ -42,7 +42,7 @@ dev_dependencies:
   cloud_firestore: ^0.13.0+1
   rxdart: ^0.18.1
   cached_network_image: ^2.0.0
-  font_awesome_flutter: ^8.5.0
+  font_awesome_flutter: ^8.8.1
 
   image_picker: ^0.6.5+3
   video_player:
@@ -56,6 +56,9 @@ dev_dependencies:
 
   flutter_launcher_icons: ^0.7.4
   
+  url_launcher: ^5.4.11
+  
+
 flutter_icons:
   image_path_ios: 'assets/images/Blue2.png'
   image_path_android: 'assets/images/Blue2.png'

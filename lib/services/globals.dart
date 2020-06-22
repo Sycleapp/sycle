@@ -20,5 +20,5 @@ class Global {
   // Firestore References for Writes
   static final Collection<Reactions> topicsRef = Collection<Reactions>(path: 'reactions');
   static final Collection<Stories> storiesRef = Collection<Stories>(path: 'stories');
-  
+  static final UserData<User> userRef = UserData<User>(collection: 'users');  
 }

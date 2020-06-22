@@ -79,12 +79,14 @@ class User {
   final String email;
   final String photoUrl;
   final String displayName;
+  final int totalLikes;
 
   User({
     this.id,
     this.email,
     this.photoUrl,
     this.displayName,
+    this.totalLikes
   });
 
   factory User.fromMap(Map doc) {
@@ -93,6 +95,7 @@ class User {
       email: doc['email'],
       photoUrl: doc['photoUrl'],
       displayName: doc['displayName'],
+      totalLikes: doc['totalLikes']
     );
   }
 }

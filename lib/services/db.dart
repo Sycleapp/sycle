@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import './globals.dart';
+import './models.dart';
 
 //Needs to be connected with Firebase (Chase S)
 
@@ -82,6 +83,16 @@ class UserData<T> {
     }
 
   }
+
+  /* Future<void> getUser() async{
+    FirebaseUser user = await _auth.currentUser();
+    streamUserDocument(user.uid);
+  }
+
+  Stream<User> streamUserDocument(String uid) {
+    DocumentReference ref = _db.collection('users').document(uid);
+    return ref.snapshots().map((v) => Global.models[User](v.data) as User);
+  } */
 
   Future<void> upsert(Map data) async {
     FirebaseUser user = await _auth.currentUser();

@@ -16,7 +16,7 @@ class LoginScreenState extends State<LoginScreen> {
     auth.getUser.then(
       (user) {
         if (user != null) {
-          Navigator.pushReplacementNamed(context, '/responces');
+          Navigator.pushReplacementNamed(context, '/responses');
         }
       },
     );

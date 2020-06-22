@@ -33,17 +33,38 @@ class AuthService {
     }
   }
   
-    Future<void> updateUserData(FirebaseUser user) {
+    Future<void> updateUserData(FirebaseUser user) async {
     DocumentReference usersRef = _db.collection('users').document(user.uid);
+
+    int totalLikes = await getTotalLikes(user.uid);
 
     return usersRef.setData({
       'uid': user.uid,
       'email': user.email,
       'displayName': user.displayName.split(" ")[0],
       'photoUrl': user.photoUrl,
+      'totalLikes': totalLikes,
       'lastActivity': DateTime.now(),
     }, merge: true);
 
+  }
+
+  Future<int> getTotalLikes(String docId) async{
+    int totalLikes;
+    try{
+      await _db.collection('users').document(docId).get().then((doc) => {
+        print('GETTTING DOC'),
+        if(doc.data.containsKey('totalLikes')){
+          totalLikes = doc.data['totalLikes'] 
+        }else{
+          totalLikes = 0
+        }
+      });
+    }
+    catch(e){
+      print(e.toString());
+    }
+    return totalLikes;
   }
 
   Future<void> signOut() {
