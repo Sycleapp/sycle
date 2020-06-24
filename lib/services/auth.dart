@@ -50,14 +50,12 @@ class AuthService {
   }
 
   Future<int> getTotalLikes(String docId) async{
-    int totalLikes;
+    int totalLikes = 0;
     try{
       await _db.collection('users').document(docId).get().then((doc) => {
         print('GETTTING DOC'),
         if(doc.data.containsKey('totalLikes')){
           totalLikes = doc.data['totalLikes'] 
-        }else{
-          totalLikes = 0
         }
       });
     }

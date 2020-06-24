@@ -6,15 +6,16 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileScreen extends StatelessWidget {
   final AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
-    FirebaseUser user = Provider.of<FirebaseUser>(context);
-    User u = Provider.of<User>(context);
-
+    //FirebaseUser user = Provider.of<FirebaseUser>(context);
+    //User u = Provider.of<User>(context);
+    User newU = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -36,16 +37,30 @@ class ProfileScreen extends StatelessWidget {
       body: Center(
         child: Column(children: [
           SizedBox(height: 25),
-          CircleAvatar(
-              radius: 50, backgroundImage: NetworkImage(u.photoUrl)),
+          FutureBuilder<String>(
+            future: imageRef(newU.photoUrl),
+            builder: (context, imageURL){
+              return CachedNetworkImage(
+                imageUrl: imageURL.data,
+                placeholder: (context, url) => const CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: 50,
+                ),
+                imageBuilder: (context, image) => CircleAvatar(
+                  backgroundImage: image,
+                  radius: 50,
+                )
+              );
+            }
+          ),
           SizedBox(height: 15),
-          Text(u.displayName.split(" ")[0],
+          Text(newU.displayName.split(" ")[0],
               style: TextStyle(
                   color: Colors.black,
                   fontFamily: "Avenir",
                   fontWeight: FontWeight.w800,
                   fontSize: 30)),
-          Text("${u.totalLikes.toString()} Likes",
+          Text("${newU.totalLikes.toString()} Likes",
               style: TextStyle(
                   color: Colors.black,
                   fontFamily: "Avenir",
@@ -118,3 +133,7 @@ _loadUrlInBrowser(String url) async {
     throw 'Could not open $url';
   }
 }
+
+Future<String> imageRef(String imgPath) async{
+  return imgPath;
+} 

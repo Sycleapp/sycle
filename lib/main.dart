@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
           //FutureProvider<List<Story>>.value(value: Global.storiesRef.getData()),
           StreamProvider<FirebaseUser>.value(
               value: FirebaseAuth.instance.onAuthStateChanged),
-          StreamProvider<User>.value(value: Global.userRef.documentStream)    
+          
+          //StreamProvider<User>.value(value: Global.userRef.documentStream)    
           //FutureProvider<List<Reaction>>.value(value: Global.reactionsRef.getData()),
         ],
         child: MaterialApp(debugShowCheckedModeBanner: false,
