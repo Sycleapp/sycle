@@ -48,6 +48,9 @@ class Collection<T> {
     return ref.snapshots().map((list) => list.documents.map((doc) => Global.models[T](doc.data) as T) );
   }
 
+  /* Stream<List<Topic>> streamTopicsData() {
+    return ref.snapshots().map((list) => list.documents.map((doc) => Topic.fromFirestore(doc)) );
+  } */
 
 }
 
@@ -72,6 +75,11 @@ class UserData<T> {
     }); //.shareReplay(maxSize: 1).doOnData((d) => print('777 $d'));// as Stream<T>;
   }
 
+  Stream<T> specificDocumentStream(String userID) {
+    Document<T> doc = Document<T>(path: '$collection/$userID'); 
+    return doc.streamData();    
+  }
+
   Future<T> getDocument() async {
     FirebaseUser user = await _auth.currentUser();
 
@@ -89,5 +97,15 @@ class UserData<T> {
     Document<T> ref = Document(path:  '$collection/${user.uid}');
     return ref.upsert(data);
   }
+
+}
+
+class DataServices{
+  final Firestore _db = Firestore.instance;
+
+  Stream<List<Topic>> streamTopics(){
+    //snapshots return a list of documents (do two maps), map individual documents to retrieve data
+    return _db.collection('topics').snapshots().map((list) => list.documents.map((doc) => Topic.fromMap(doc.data)));
+  } 
 
 }

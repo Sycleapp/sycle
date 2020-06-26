@@ -8,13 +8,23 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  final bool visibility;
+  
+  ProfileScreen(this.visibility);
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen>{
   final AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
     //FirebaseUser user = Provider.of<FirebaseUser>(context);
     //User u = Provider.of<User>(context);
+    bool visibility = widget.visibility;
     User newU = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -25,13 +35,16 @@ class ProfileScreen extends StatelessWidget {
         ),
         elevation: .2,
         backgroundColor: Colors.white,
-        title: Text(
-          'Profile',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: "Avenir",
-            fontWeight: FontWeight.w900,
-          ),
+        title: Visibility(
+          visible: visibility,
+          child: Text(
+            'Profile',
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: "Avenir",
+              fontWeight: FontWeight.w900,
+            ),
+          )
         ),
       ),
       body: Center(
@@ -75,7 +88,9 @@ class ProfileScreen extends StatelessWidget {
             BuildSocialMediaLinks('twitter', 'https://twitter.com/explore')
           ]),
           SizedBox(height: 15),
-          FlatButton(
+          Visibility(
+            visible: visibility,
+            child: FlatButton(
               child: Text(
                 'logout',
                 style: TextStyle(color: Colors.white),
@@ -85,7 +100,9 @@ class ProfileScreen extends StatelessWidget {
                 await auth.signOut();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil('/', (route) => false);
-              })
+              }
+            )
+          )          
         ]),
       ),
     );

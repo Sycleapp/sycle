@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 //// Embedded Maps
 
 class Option {
@@ -26,7 +28,7 @@ class Question {
 }
 
 ///// Database Collections
-
+//OLD/DEPRECTAED CODE
 class Stories { 
   String id;
   String title;
@@ -74,6 +76,64 @@ class Reactions {
   
 }
 
+/////
+
+class Topic { 
+  String id;
+  String title;
+  //List<Response> responses;
+  
+  Topic({this.id, this.title});//, //this.responses});
+
+  factory Topic.fromMap(Map data) {
+    return Topic(
+      id: data['topicID'] ?? '',
+      title: data['topicName'] ?? '',
+      //responses: new List<Response>.from(data['responses'])
+    );
+  }
+
+  /* factory Topic.fromFirestore(DocumentSnapshot doc){
+    Map data = doc.data;
+    return Topic(
+      id: data['topicID'] ?? '',
+      title: data['topicName'] ?? '',
+    );
+  } */
+  
+}
+
+class Response { 
+  String uid;
+  String tid;
+  String rid;
+  String displayName;
+  String tTitle;
+  String caption;
+  String content;
+  String location;
+  //int likeCount;
+  List<String> rUsers;
+
+  Response({ this.uid, this.tid, this.rid, this.displayName, this.tTitle, this.caption, this.content, this.location, this.rUsers});
+
+  factory Response.fromMap(Map data) {
+    return Response(
+      uid: data['uploaderID'] ?? '',
+      tid: data['topicID'] ?? '',
+      rid: data['responseID'] ?? '',
+      displayName: data['uploaderName'] ?? '',
+      tTitle: data['topicName'] ?? '',
+      location: data['location'] ?? 'Mars',
+      caption: data['caption'] ?? '',
+      content: data['responseContent'] ?? '',
+      //likeCount: data['likeCount'] ?? 0,
+      rUsers: List<String>.from(data['responseUsers']) ?? ['']
+    );
+  } 
+}
+
+
 class User {
   final String id;
   final String email;
@@ -96,6 +156,16 @@ class User {
       photoUrl: doc['photoUrl'],
       displayName: doc['displayName'],
       totalLikes: doc['totalLikes']
+    );
+  }
+
+  factory User.initialData(){
+    return User(
+      id: '',
+      email: 'name@example.com',
+      photoUrl: 'https://uploads0.wikiart.org/00129/images/katsushika-hokusai/the-great-wave-off-kanagawa.jpg',
+      displayName: 'Hello',
+      totalLikes: 54321
     );
   }
 }

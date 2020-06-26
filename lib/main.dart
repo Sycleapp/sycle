@@ -16,7 +16,9 @@ class MyApp extends StatelessWidget {
           //FutureProvider<List<Story>>.value(value: Global.storiesRef.getData()),
           StreamProvider<FirebaseUser>.value(
               value: FirebaseAuth.instance.onAuthStateChanged),
-          
+          FutureProvider<List<Topic>>.value(value: Global.topicRef.getData()),
+          //StreamProvider<List<Topic>>.value(value: Global.topicRef.streamData())
+          //StreamProvider<Topic>.value(value: Global.entryRef.streamData()),
           //StreamProvider<User>.value(value: Global.userRef.documentStream)    
           //FutureProvider<List<Reaction>>.value(value: Global.reactionsRef.getData()),
         ],
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
             routes: {
               '/': (context) => LoginScreen(),
               '/discover': (context) => DiscoverScreen(),
-              '/profile': (context) => ProfileScreen(),
+              '/profile': (context) => ProfileScreen(true),
               '/activity': (context) => ActivityScreen(),
               '/responses': (context) => ResponseScreen(),
               '/upload': (context) => UploadScreen(),
