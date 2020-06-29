@@ -103,23 +103,17 @@ class UserData<T> {
 class DataServices{
   final Firestore _db = Firestore.instance;
 
-  //need to change the following fields
-   Future<void> updateLikeInformationInFeedSubCollection(DocumentSnapshot reaction, FirebaseUser user, bool isTapped) async{
-    String rid = reaction['reactionID'];
-    String sid = reaction['storyID'];
-    String sTitle = reaction['storyTitle'];
-    String uidUploader = reaction['userID'];
-    List<String> clickUsers = new List<String>.from(reaction['reactionUsers']);
-    String uidClicker = user.uid;
+   Future<void> updateLikeInformationInFeedSubCollection(FirebaseUser user, bool isTapped, String responseId, String topicId, String topicName, String uploaderId, List<String>clickedUsers) async{
+    String clickerId = user.uid;
     String clickerName = user.displayName;
     String clickerPhoto = user.photoUrl;
 
     //check if user has already liked the reaction
     bool isRecorded = false;
     
-    if(clickUsers != null){
-      clickUsers.forEach((user) => {
-        if(user == uidClicker){
+    if(clickedUsers != null){
+      clickedUsers.forEach((user) => {
+        if(user == clickerId){
           isRecorded = true
         }
       });
@@ -128,22 +122,26 @@ class DataServices{
     if(isTapped && !isRecorded){
       print("DATA SHOULD BE UPDATED");
       try{
-        _db.collection('stories').document(sid).collection('reactions').document(rid).updateData(
+        _db.collection('topics').document(topicId).collection('responses').document(responseId).updateData(
           {
-            'reactionUsers': FieldValue.arrayUnion([uidClicker]),
+            'responseUsers': FieldValue.arrayUnion([clickerId]),
             'likeCount': FieldValue.increment(1)
           }
         );
-        _db.collection('users').document(uidClicker).collection('feeds').document().setData(
+        _db.collection('users').document(uploaderId).collection('feeds').document().setData(
           {
-            'reactionUserID': uidClicker,
-            'reactionUserName': clickerName.split(" ")[0],
-            'reactionUserPhotoURL': clickerPhoto,
-            'storyID': sid,
-            'storyTitle': sTitle,
-            'reactionID': rid,
-            'uploadUserID': uidUploader
+            'clickerID': clickerId,
+            'clickerName': clickerName.split(" ")[0],
+            'clickerPhotoURL': clickerPhoto,
+            'topicID': topicId,
+            'topicName': topicName,
+            'responseID': responseId,
+            'uploaderID': uploaderId
           }, merge: true
+        );
+
+        _db.collection('users').document(uploaderId).updateData(
+          {'totalLikes': FieldValue.increment(1)}
         );
     
         isRecorded = true;
@@ -155,18 +153,22 @@ class DataServices{
 
     if(!isTapped && isRecorded){
       try{
-        _db.collection('stories').document(sid).collection('reactions').document(rid).updateData(
+        _db.collection('topics').document(topicId).collection('responses').document(responseId).updateData(
           {
-            'reactionUsers': FieldValue.arrayRemove([uidClicker]),
+            'responseUsers': FieldValue.arrayRemove([clickerId]),
             'likeCount': FieldValue.increment(-1)
-          }                    
+          }
         );
-        var query = _db.collection('users').document(uidClicker).collection('feeds').where('reactionID', isEqualTo: rid).where('reactionUserID', isEqualTo: uidClicker);
+        var query = _db.collection('users').document(uploaderId).collection('feeds').where('responseID', isEqualTo: responseId).where('clickerID', isEqualTo: clickerId);
         query.getDocuments().then((collectionSnapshot) => {
           collectionSnapshot.documents.forEach((doc){
             doc.reference.delete();
           })
         });
+
+         _db.collection('users').document(uploaderId).updateData(
+          {'totalLikes': FieldValue.increment(-1)}
+        );
 
         isRecorded = false;
       }

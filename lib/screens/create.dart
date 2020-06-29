@@ -83,6 +83,10 @@ class _CreateScreenState extends State<CreateScreen> {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => UploadScreen(topicId, topicName, file)
                     ))
+                  }else{
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => CreateScreen(topicId, topicName)
+                    ))
                   }
                 })
               },

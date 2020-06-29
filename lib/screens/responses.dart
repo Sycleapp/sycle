@@ -99,7 +99,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
       stream: Firestore.instance.collection('topics').document(topic['topicID']).collection('responses').snapshots(),
       builder: (context, snapshot){
         if(!snapshot.hasData || snapshot.data.documents.length == 0){
-          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION', 'null');
+          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION', 'null', 'null', null);
         } 
         return _buildResponseStack(context, snapshot.data.documents);
       }
@@ -137,14 +137,14 @@ class _ResponseScreenState extends State<ResponseScreen> {
       future: imageRef(response['responseContent']),
       builder: (context, snapshotUrl){
         if(!snapshotUrl.hasData){
-          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION', 'null');
+          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION', 'null', 'null', null);
         }
-        return _buildResponseItems(context, snapshotUrl.data, response['topicName'], response['uploaderName'], response['uploaderID'], response['caption'], response['location'], response['topicID']);
+        return _buildResponseItems(context, snapshotUrl.data, response['topicName'], response['uploaderName'], response['uploaderID'], response['caption'], response['location'], response['topicID'], response['responseID'], response['responseUsers']);
       }
     ); 
   }
   
-  Widget _buildResponseItems(BuildContext context, String responseImgUrl, String topicName, String uploaderName, String uploaderId, String caption, String location, String topicId){
+  Widget _buildResponseItems(BuildContext context, String responseImgUrl, String topicName, String uploaderName, String uploaderId, String caption, String location, String topicId, String responseId, List<dynamic> responseUsers){
     return Container(
       //Video playback
         decoration: new BoxDecoration(
@@ -210,7 +210,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
           )
         ),
         //Bottom UI
-        BottomFirstRow(uploaderName, uploaderId, caption),        
+        BottomFirstRow(uploaderName, uploaderId, caption, responseId, topicId, topicName, responseUsers),        
         LocationComponent(location),        
         Container(height: SizeConfig.safeBlockVertical * 1,)
       ],
@@ -229,8 +229,12 @@ class BottomFirstRow extends StatelessWidget{
   final String uploaderName;
   final String uploaderId;
   final String caption;
+  final String responseId; 
+  final String topicId;
+  final String topicName;
+  final List<dynamic> responseUsers;
   
-  BottomFirstRow(this.uploaderName, this.uploaderId, this.caption);
+  BottomFirstRow(this.uploaderName, this.uploaderId, this.caption, this.responseId, this.topicId, this.topicName, this.responseUsers);
 
   @override
   Widget build(BuildContext context){
@@ -251,8 +255,8 @@ class BottomFirstRow extends StatelessWidget{
           ],
         ),
         Padding(
-          padding: new EdgeInsets.only(right: 15.0),
-          child: LikeComponent()
+          padding: new EdgeInsets.only(right: 25.0),
+          child: LikeComponent(responseId, topicId, topicName, uploaderId, responseUsers)
         )
       ],
     );
@@ -337,18 +341,58 @@ class CaptionComponent extends StatelessWidget{
   }
 }
 
-class LikeComponent extends StatelessWidget{
+class LikeComponent extends StatefulWidget{
+  final String responseId;
+  final String topicId;
+  final String topicName;
+  final String uploaderId;
+  final List<dynamic> responseUsers;
+
+  LikeComponent(this.responseId, this.topicId, this.topicName, this.uploaderId, this.responseUsers);
   //needs to get the response object
   //rewrite code in DataServices class
-  
+  @override
+  _LikeComponentState createState() => _LikeComponentState();
+}
+
+class _LikeComponentState extends State<LikeComponent>{
   @override
   Widget build(BuildContext context){
+    bool isTapped = false;
+    DataServices _firestore = DataServices();
     FirebaseUser user = Provider.of<FirebaseUser>(context);
+
+    String responseId = widget.responseId;
+    String topicId = widget.topicId;
+    String topicName = widget.topicName;
+    String uploaderId = widget.uploaderId;
+    List<String> clickedUsers = new List<String>.from(widget.responseUsers);
     
-    return Icon(
-      Icons.favorite,
-      color: Colors.red,
-      size: 48.0,
+    bool isRecorded = false;
+    clickedUsers.forEach((rUser) => {
+      if(rUser == user.uid){
+        isRecorded = true
+      }
+    });
+    return InkWell(
+      child: Icon(
+        (isTapped||isRecorded? Icons.favorite : Icons.favorite_border),
+        color: (isTapped||isRecorded? Colors.red : Colors.white),
+        size: 48.0
+      ),
+      onTap: (){
+        setState((){
+          if(isTapped || isRecorded){
+            isTapped = false;
+            isRecorded = false;
+          }
+          else{
+            isTapped = true;
+            isRecorded = true;
+          }
+        });
+        _firestore.updateLikeInformationInFeedSubCollection(user, isTapped, responseId, topicId, topicName, uploaderId, clickedUsers);
+      }
     );
   }
 }

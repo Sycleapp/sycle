@@ -89,11 +89,17 @@ class _UploadScreenState extends State<UploadScreen> {
             onTap: () {
               String caption = captionController.text;
               String location = locationController.text;
-              writeToFirebase(topicId, topicName, user, caption, location, file).then((onComplete) => {
-                if(onComplete){
-                  Navigator.pushNamed(context, '/responses')
-                }
-              });
+              writeToFirebase(topicId, topicName, user, caption, location, file)
+                .then((onComplete) => {
+                  if(onComplete){
+                    Navigator.pushNamed(context, '/responses')
+                  }
+                })
+                .catchError((error) => {
+                  Text(
+                    'Sorry, an error occurred. Please try again.'
+                  )
+                });
             },
             child: Container(
                 margin: new EdgeInsets.all(1),
@@ -152,6 +158,7 @@ class _UploadScreenState extends State<UploadScreen> {
       'uploaderName': uploaderName
     };
 
+    //need to handle error events
     responseRef.setData(data);    
     topicRef.updateData(
       {
@@ -169,6 +176,7 @@ class _UploadScreenState extends State<UploadScreen> {
     final StorageUploadTask uploadTask = storageRef.putFile(file);
     final StorageTaskSnapshot storageSnapshot = await uploadTask.onComplete;
     String imageUrl = await storageSnapshot.ref.getDownloadURL();
+    //need to handle error events
     if(imageUrl == null){
         responseReference.delete();
         topicReference.updateData(
