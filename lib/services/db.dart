@@ -103,9 +103,77 @@ class UserData<T> {
 class DataServices{
   final Firestore _db = Firestore.instance;
 
-  Stream<List<Topic>> streamTopics(){
-    //snapshots return a list of documents (do two maps), map individual documents to retrieve data
-    return _db.collection('topics').snapshots().map((list) => list.documents.map((doc) => Topic.fromMap(doc.data)));
-  } 
+  //need to change the following fields
+   Future<void> updateLikeInformationInFeedSubCollection(DocumentSnapshot reaction, FirebaseUser user, bool isTapped) async{
+    String rid = reaction['reactionID'];
+    String sid = reaction['storyID'];
+    String sTitle = reaction['storyTitle'];
+    String uidUploader = reaction['userID'];
+    List<String> clickUsers = new List<String>.from(reaction['reactionUsers']);
+    String uidClicker = user.uid;
+    String clickerName = user.displayName;
+    String clickerPhoto = user.photoUrl;
+
+    //check if user has already liked the reaction
+    bool isRecorded = false;
+    
+    if(clickUsers != null){
+      clickUsers.forEach((user) => {
+        if(user == uidClicker){
+          isRecorded = true
+        }
+      });
+    }
+
+    if(isTapped && !isRecorded){
+      print("DATA SHOULD BE UPDATED");
+      try{
+        _db.collection('stories').document(sid).collection('reactions').document(rid).updateData(
+          {
+            'reactionUsers': FieldValue.arrayUnion([uidClicker]),
+            'likeCount': FieldValue.increment(1)
+          }
+        );
+        _db.collection('users').document(uidClicker).collection('feeds').document().setData(
+          {
+            'reactionUserID': uidClicker,
+            'reactionUserName': clickerName.split(" ")[0],
+            'reactionUserPhotoURL': clickerPhoto,
+            'storyID': sid,
+            'storyTitle': sTitle,
+            'reactionID': rid,
+            'uploadUserID': uidUploader
+          }, merge: true
+        );
+    
+        isRecorded = true;
+      }
+      catch(e){
+        print(e.toString());
+      }
+    }
+
+    if(!isTapped && isRecorded){
+      try{
+        _db.collection('stories').document(sid).collection('reactions').document(rid).updateData(
+          {
+            'reactionUsers': FieldValue.arrayRemove([uidClicker]),
+            'likeCount': FieldValue.increment(-1)
+          }                    
+        );
+        var query = _db.collection('users').document(uidClicker).collection('feeds').where('reactionID', isEqualTo: rid).where('reactionUserID', isEqualTo: uidClicker);
+        query.getDocuments().then((collectionSnapshot) => {
+          collectionSnapshot.documents.forEach((doc){
+            doc.reference.delete();
+          })
+        });
+
+        isRecorded = false;
+      }
+      catch(e){
+        print(e.toString());
+      }       
+    } 
+  }
 
 }

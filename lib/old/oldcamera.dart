@@ -197,7 +197,8 @@ class CameraScreenState extends State<CameraScreen>
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UploadScreen(),
+                    //modified to have no errors for the UploadScreen()
+                    builder: (context) => ResponseScreen(),
                   ),
                 ),
               );

@@ -81,14 +81,16 @@ class Reactions {
 class Topic { 
   String id;
   String title;
+  int totalResponses;
   //List<Response> responses;
   
-  Topic({this.id, this.title});//, //this.responses});
+  Topic({this.id, this.title, this.totalResponses});//, //this.responses});
 
   factory Topic.fromMap(Map data) {
     return Topic(
       id: data['topicID'] ?? '',
       title: data['topicName'] ?? '',
+      totalResponses: data['responseCount']
       //responses: new List<Response>.from(data['responses'])
     );
   }
@@ -112,10 +114,10 @@ class Response {
   String caption;
   String content;
   String location;
-  //int likeCount;
+  int likeCount;
   List<String> rUsers;
 
-  Response({ this.uid, this.tid, this.rid, this.displayName, this.tTitle, this.caption, this.content, this.location, this.rUsers});
+  Response({ this.uid, this.tid, this.rid, this.displayName, this.tTitle, this.caption, this.content, this.location, this.rUsers, this.likeCount});
 
   factory Response.fromMap(Map data) {
     return Response(
@@ -127,7 +129,7 @@ class Response {
       location: data['location'] ?? 'Mars',
       caption: data['caption'] ?? '',
       content: data['responseContent'] ?? '',
-      //likeCount: data['likeCount'] ?? 0,
+      likeCount: data['likeCount'] ?? 0,
       rUsers: List<String>.from(data['responseUsers']) ?? ['']
     );
   } 

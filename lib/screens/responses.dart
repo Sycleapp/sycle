@@ -1,4 +1,6 @@
 //This is the UI for the responces for a story
+import 'dart:io';
+
 import 'package:Sycle/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:Sycle/shared/size_config.dart';
@@ -8,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Sycle/screens/create.dart';
 
 class ResponseScreen extends StatefulWidget {
   @override
@@ -20,6 +24,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
   );
 
   int _index;
+  int numOfResponses;
   String defaultImgUrl = 'https://payparitypost.com/wp-content/uploads/2019/12/AdobeStock_253908855_1280px.jpg';
 
   @override
@@ -63,31 +68,38 @@ class _ResponseScreenState extends State<ResponseScreen> {
   }
 
   Widget _getTopics(BuildContext context){
-    List<Topic> topics = Provider.of<List<Topic>>(context); 
-    
-    return _buildTopics(context, topics);
-    
+    //change from futurebuilder to streambuilder
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('topics').snapshots(),
+      builder: (context, snapshot){
+        if(!snapshot.hasData) return LinearProgressIndicator();
+        return _buildTopics(context, snapshot.data.documents);
+      }
+    ); 
   }
 
-  Widget _buildTopics(BuildContext context, List<Topic> topics){
+  Widget _buildTopics(BuildContext context, List<DocumentSnapshot> topics){
     return PageView(
       controller: _controller,
       scrollDirection: Axis.vertical,
-      onPageChanged: (index){
-        setState(() {
-          _index = 0;
+      onPageChanged: (page) {
+        Firestore.instance.collection('topics').document(topics[page].documentID).get().then((document) => {
+          setState((){
+            _index = 0;
+            numOfResponses = document.data['responseCount'];
+          })            
         });        
       },
       children: topics.map((data) => _buildTopicItems(context, data)).toList() 
     );
   }
 
-  Widget _buildTopicItems(BuildContext context, Topic topic){
+  Widget _buildTopicItems(BuildContext context, DocumentSnapshot topic){
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('topics').document(topic.id).collection('responses').snapshots(),
+      stream: Firestore.instance.collection('topics').document(topic['topicID']).collection('responses').snapshots(),
       builder: (context, snapshot){
         if(!snapshot.hasData || snapshot.data.documents.length == 0){
-          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION');
+          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION', 'null');
         } 
         return _buildResponseStack(context, snapshot.data.documents);
       }
@@ -95,16 +107,20 @@ class _ResponseScreenState extends State<ResponseScreen> {
   }
 
   Widget _buildResponseStack(BuildContext context, List<DocumentSnapshot> responses){
+    numOfResponses = responses.length;
+
     Timer.periodic(Duration(seconds: 5), (Timer time){
-      if(_index < responses.length - 1){
+      if(_index < numOfResponses - 1){
         setState(() {
           _index += 1;
+          print('SWITCHED TO WIDGET: $_index, GETTIME: ${DateTime.now()}');
         });
       }
 
       //cancel timer after no more pages
-      if(_index == responses.length - 1){
+      if(_index == numOfResponses - 1){
         time.cancel();
+        print('!!!!!END!!!! ON WIDGET: $_index, GETTIME: ${DateTime.now()}');
       }
     });
 
@@ -114,19 +130,21 @@ class _ResponseScreenState extends State<ResponseScreen> {
     );
   }
 
+  
+
   Widget _buildResponseSlide(BuildContext context, DocumentSnapshot response){
     return FutureBuilder<String>(
       future: imageRef(response['responseContent']),
       builder: (context, snapshotUrl){
         if(!snapshotUrl.hasData){
-          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION');
+          return _buildResponseItems(context, defaultImgUrl, 'Topic Name', 'Name', 'null', 'Hello World', 'LOCATION', 'null');
         }
-        return _buildResponseItems(context, snapshotUrl.data, response['topicName'], response['uploaderName'], response['uploaderID'], response['caption'], response['location']);
+        return _buildResponseItems(context, snapshotUrl.data, response['topicName'], response['uploaderName'], response['uploaderID'], response['caption'], response['location'], response['topicID']);
       }
     ); 
   }
   
-  Widget _buildResponseItems(BuildContext context, String responseImgUrl, String topicName, String uploaderName, String uploaderId, String caption, String location){
+  Widget _buildResponseItems(BuildContext context, String responseImgUrl, String topicName, String uploaderName, String uploaderId, String caption, String location, String topicId){
     return Container(
       //Video playback
         decoration: new BoxDecoration(
@@ -154,7 +172,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
               children: <Widget>[
                 DiscoverRouteComponent(),
                 TopicNameComponent(topicName),
-                CreateRouteComponent()
+                CreateRouteComponent(topicId, topicName)
               ],
             )
           )
@@ -192,8 +210,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
           )
         ),
         //Bottom UI
-        NameComponent(uploaderName, uploaderId),
-        CaptionComponent(caption),
+        BottomFirstRow(uploaderName, uploaderId, caption),        
         LocationComponent(location),        
         Container(height: SizeConfig.safeBlockVertical * 1,)
       ],
@@ -201,15 +218,46 @@ class _ResponseScreenState extends State<ResponseScreen> {
     );
   }
 
-   Future<String> imageRef(String imgPath) async{
+  Future<String> imageRef(String imgPath) async{
     var imgRef = FirebaseStorage.instance.ref().child(imgPath);
-    print(imgRef);
     var downloadURL = await imgRef.getDownloadURL();
     return downloadURL;
   } 
 }
 
+class BottomFirstRow extends StatelessWidget{
+  final String uploaderName;
+  final String uploaderId;
+  final String caption;
+  
+  BottomFirstRow(this.uploaderName, this.uploaderId, this.caption);
 
+  @override
+  Widget build(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: new EdgeInsets.only(left: 15.0),
+              child: NameComponent(uploaderName, uploaderId)
+            ),
+            Padding(
+              padding: new EdgeInsets.only(left: 10.0),
+              child: CaptionComponent(caption)
+            )
+          ],
+        ),
+        Padding(
+          padding: new EdgeInsets.only(right: 15.0),
+          child: LikeComponent()
+        )
+      ],
+    );
+  }
+}
 
 class NameComponent extends StatelessWidget{
   final String displayName;
@@ -285,6 +333,22 @@ class CaptionComponent extends StatelessWidget{
           ]
         )
       ),
+    );
+  }
+}
+
+class LikeComponent extends StatelessWidget{
+  //needs to get the response object
+  //rewrite code in DataServices class
+  
+  @override
+  Widget build(BuildContext context){
+    FirebaseUser user = Provider.of<FirebaseUser>(context);
+    
+    return Icon(
+      Icons.favorite,
+      color: Colors.red,
+      size: 48.0,
     );
   }
 }
@@ -373,6 +437,11 @@ class TopicNameComponent extends StatelessWidget{
 }
 
 class CreateRouteComponent extends StatelessWidget{
+  final String topicId;
+  final String topicName;
+
+  CreateRouteComponent(this.topicId, this.topicName);
+
   @override
   Widget build(BuildContext context){
     return Container(
@@ -385,7 +454,14 @@ class CreateRouteComponent extends StatelessWidget{
         color: Colors.white,
         iconSize: 28,
         onPressed: () {
-          Navigator.pushNamed(context, '/create');
+          if(topicId != 'null' && topicName != 'null'){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateScreen(topicId, topicName)));
+          }
+          else{
+            Navigator.pushNamed(context, '/responses');
+          }          
         }
       ),
     );

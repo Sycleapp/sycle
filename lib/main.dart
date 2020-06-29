@@ -34,10 +34,10 @@ class MyApp extends StatelessWidget {
               '/profile': (context) => ProfileScreen(true),
               '/activity': (context) => ActivityScreen(),
               '/responses': (context) => ResponseScreen(),
-              '/upload': (context) => UploadScreen(),
+              //'/upload': (context) => UploadScreen(),
               '/preview': (context) => PreviewScreen(),
               '/explore': (context) => ExploreScreen(),
-              '/create': (context) => CreateScreen(),
+              //'/create': (context) => CreateScreen(),
             }
         )
     );
