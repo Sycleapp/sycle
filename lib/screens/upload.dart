@@ -94,11 +94,9 @@ class _UploadScreenState extends State<UploadScreen> {
                   if(onComplete){
                     Navigator.pushNamed(context, '/responses')
                   }
-                })
-                .catchError((error) => {
-                  Text(
-                    'Sorry, an error occurred. Please try again.'
-                  )
+                  else{
+                    _showErrorMessage()
+                  }
                 });
             },
             child: Container(
@@ -126,6 +124,7 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   Future<bool> writeToFirebase(String topicId, String topicName, FirebaseUser user, String caption, String location, File file) async{
+    bool writeSuccess = false;
     String uploaderName = user.displayName.split(" ")[0];
     int likeCount = 0;
     //reactionID will be from document creation
@@ -158,15 +157,29 @@ class _UploadScreenState extends State<UploadScreen> {
       'uploaderName': uploaderName
     };
 
-    //need to handle error events
-    responseRef.setData(data);    
-    topicRef.updateData(
-      {
-        'responseCount': FieldValue.increment(1)
-      }                    
-    );
-    bool completeFileUpload = await uploadToFirebaseStorage(file, filepath, responseRef, topicRef);
-    return completeFileUpload;
+    try{
+      responseRef.setData(data)
+        .whenComplete(() => {
+        writeSuccess = true
+      })
+        .catchError((e) => writeSuccess = false);   
+    }
+    catch(e){
+      return false;
+    }
+
+    if(writeSuccess){
+      topicRef.updateData(
+        {
+          'responseCount': FieldValue.increment(1)
+        }                    
+      );
+      bool completeFileUpload = await uploadToFirebaseStorage(file, filepath, responseRef, topicRef);
+      return completeFileUpload;
+    }
+    else{
+      return false;
+    }
   }
 
   Future<bool> uploadToFirebaseStorage(File file, String filepath, DocumentReference responseReference, DocumentReference topicReference) async{
@@ -184,7 +197,37 @@ class _UploadScreenState extends State<UploadScreen> {
             'responseCount': FieldValue.increment(-1)
           }                    
         );
+        return false;
+    }else{
+      return true;
     }
-    return true;
+  }
+
+  Future<void> _showErrorMessage() async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true, 
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Oops!'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('Sorry, an error has occurred.'),
+              Text('Would you like to try again?'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Back'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
   }
 }

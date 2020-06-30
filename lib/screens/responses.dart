@@ -375,27 +375,28 @@ class _LikeComponentState extends State<LikeComponent>{
       }
     });
     return InkWell(
-      child: Icon(
-        (isTapped||isRecorded? Icons.favorite : Icons.favorite_border),
-        color: (isTapped||isRecorded? Colors.red : Colors.white),
-        size: 48.0
-      ),
-      onTap: (){
-        setState((){
-          if(isTapped || isRecorded){
-            isTapped = false;
-            isRecorded = false;
-          }
-          else{
-            isTapped = true;
-            isRecorded = true;
-          }
-        });
-        _firestore.updateLikeInformationInFeedSubCollection(user, isTapped, responseId, topicId, topicName, uploaderId, clickedUsers);
-      }
+        child: Icon(
+          (isTapped||isRecorded? Icons.favorite : Icons.favorite_border),
+          color: (isTapped||isRecorded? Colors.red : Colors.white),
+          size: 48.0
+        ),
+        onTap: (){
+          setState((){
+            if(isTapped || isRecorded){
+              isTapped = false;
+              isRecorded = false;
+            }
+            else{
+              isTapped = true;
+              isRecorded = true;
+            }
+          });
+          _firestore.updateLikeInformationInFeedSubCollection(user, isTapped, responseId, topicId, topicName, uploaderId, clickedUsers);
+        }
     );
   }
 }
+
 
 class LocationComponent extends StatelessWidget{
   final String location;
@@ -428,6 +429,7 @@ class LocationComponent extends StatelessWidget{
     );
   }
 }
+
 
 class DiscoverRouteComponent extends StatelessWidget{
   @override

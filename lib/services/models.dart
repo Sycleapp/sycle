@@ -135,6 +135,31 @@ class Response {
   } 
 }
 
+class Feed{
+  String rid;
+  String clickerId;
+  String clickerName;
+  String clickerPhoto;
+  String tid;
+  String tName;
+  String uidUpload;
+  
+  Feed({this.rid, this.clickerId, this.clickerName, this.clickerPhoto, this.tid, this.tName, this.uidUpload});
+
+  factory Feed.fromMap(Map data) {
+    return Feed(
+      rid: data['responseID'] ?? '',
+      clickerId: data['clickerID'] ?? '',
+      clickerName: data['clickerName'] ?? '',
+      clickerPhoto: data['clickerPhotoURL'],
+      tid: data['topicID'] ?? '',
+      tName: data['topicName'] ?? '',
+      uidUpload: data['uploaderID'] ?? '',
+    );
+  } 
+
+}
+
 
 class User {
   final String id;
