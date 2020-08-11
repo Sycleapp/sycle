@@ -61,8 +61,8 @@ dev_dependencies:
   
 
 flutter_icons:
-  image_path_ios: 'assets/images/Blue2.png'
-  image_path_android: 'assets/images/Blue2.png'
+  image_path_ios: 'assets/images/LogoM.png'
+  image_path_android: 'assets/images/LogoM.png'
   android: true
   ios: true
 
@@ -101,6 +101,7 @@ flutter:
     - assets/images/Capture.png
     - assets/images/Gallery.png
     - assets/images/LogoTest4.png
+    - assets/images/LogoM.png
 
     #icons
     - assets/icon/LikeIconActivity.png

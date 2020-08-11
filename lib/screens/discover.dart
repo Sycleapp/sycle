@@ -16,7 +16,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         backgroundColor: Colors.black,
         brightness: Brightness.dark, 
         iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
+            color: Colors.green, //change your color here
           ),
            elevation: .2,
          title: Text('Discover',
